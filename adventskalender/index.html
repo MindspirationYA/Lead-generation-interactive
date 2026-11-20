@@ -1,0 +1,1731 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<base href="/adventskalender/">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Halt und Richtung im Dezember</title>
+<meta name="description" content="Dein Online-Adventskalender von Yassi (Mindspiration): jeden Tag ein kleiner Schritt für dich, damit du nicht allein durch den Dezember gehst.">
+<meta name="theme-color" content="#eeede7">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Halt und Richtung im Dezember">
+<meta property="og:description" content="Dein Online-Adventskalender von Yassi (Mindspiration): jeden Tag ein kleiner Schritt für dich, damit du nicht allein durch den Dezember gehst.">
+<!-- og:image: 1200 x 630 Bild hochladen und die volle Adresse hier eintragen, z. B. <meta property="og:image" content="https://DEINE-SEITE/teilen.jpg"> -->
+<meta name="apple-mobile-web-app-title" content="Dezember">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+/* Layout: ein Adventskalender in Creme. Oben der Kranz, darunter das eigene Sternbild und das Türchen-Raster; jedes Türchen öffnet ein ruhiges Blatt. */
+:root {
+  --creme: #eeede7; --papier: #f9f8f4; --taupe: #8d846f; --sand: #dbd4c2; --tinte: #5b5444; --knopf: #6f6753;
+  --tanne: #3f5c4a; --tanne-hell: #6d8a76; --beere: #9c3f3a; --gold: #b8975a; --licht: #f3e3bb; --petrol: #344d59;
+  --display: 'Archivo Narrow', 'Arial Narrow', sans-serif;
+  --zahl: 'Fraunces', Georgia, serif;
+  --satz: 'Cormorant Garamond', Georgia, serif;
+  --text: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  color-scheme: light;
+}
+[hidden] { display: none !important; }
+html, body { min-height: 100%; }
+body { background: var(--creme); color: var(--tinte); font-family: var(--text); font-size: 16px; line-height: 1.55; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--tinte); outline-offset: 2px; }
+.seite { max-width: 620px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 40px; display: flex; flex-direction: column; gap: 22px; }
+.hero { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.hero .kranz { width: min(58vw, 230px); display: block; }
+h1 { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(30px, 8vw, 40px); line-height: 1.1; text-wrap: balance; }
+.unter { margin: 0; font-size: 15px; max-width: 34ch; }
+.countdown { margin: 0; text-align: center; font-family: var(--display); font-weight: 600; font-size: 15px; letter-spacing: .08em; color: var(--tanne); }
+.countdown:empty { display: none; }
+.tuer.zu { cursor: default; }
+.tuer.zu svg.kranz { opacity: .55; }
+.zu-hinweis { position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--tinte); color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 14px; z-index: 50; max-width: calc(100vw - 32px); text-align: center; }
+.fuss a { color: inherit; }
+.entwurf { margin: 0; font-size: 13px; text-align: center; background: var(--papier); border: 1px dashed var(--taupe); border-radius: 6px; padding: 8px 12px; }
+.block-titel { margin: 0; font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; }
+.himmel { display: flex; flex-direction: column; gap: 10px; }
+.himmel-text { font-size: 14px; }
+.himmel-bild svg { display: block; width: 100%; height: auto; background: var(--papier); border: 1px solid var(--sand); border-radius: 6px; }
+.himmel-bild { width: 100%; max-width: 280px; align-self: center; }
+.himmel-name { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 20px; color: var(--tanne); text-align: center; }
+.textknopf { appearance: none; background: none; border: 0; padding: 4px; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; align-self: flex-start; }
+.raster { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; perspective: 900px; }
+@media (min-width: 560px) { .raster { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.fach { background: var(--licht); border-radius: 5px; aspect-ratio: 3 / 4; min-width: 0; }
+.tuer { appearance: none; position: relative; width: 100%; height: 100%; padding: 0; background: var(--papier); border: 1px solid var(--gold); border-radius: 5px; display: flex; align-items: center; justify-content: center; overflow: hidden; transform-origin: left center; transition: transform .45s cubic-bezier(.45,.05,.3,1), background-color .3s; }
+.tuer.auf { transform: rotateY(-75deg); }
+.tuer svg.kranz { position: absolute; left: 6%; top: 50%; width: 88%; height: auto; transform: translateY(-50%); }
+.tuer.fest { background: #fbf4df; border-width: 2px; }
+.tuer.geoeffnet { background: #f3f0e6; }
+.tuer .haken { position: absolute; top: 5px; right: 6px; width: 11px; height: 11px; color: var(--gold); }
+.weiter { background: var(--papier); border-left: 3px solid var(--gold); padding: 12px 14px; font-size: 15px; }
+.fuss { margin: 0; text-align: center; font-size: 13px; }
+
+/* Das Blatt hinter dem Türchen */
+#blatt { position: fixed; inset: 0; z-index: 20; background: var(--creme); overflow-y: auto; -webkit-overflow-scrolling: touch; padding-top: env(safe-area-inset-top, 0px); }
+.blatt-innen { max-width: 520px; margin-inline: auto; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); padding-block: 14px 110px; display: flex; flex-direction: column; gap: 18px; animation: auf .45s ease both; }
+@keyframes auf { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.blatt-kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.blatt-kopf .kranz { width: 74px; height: 74px; flex: none; }
+#zu { appearance: none; background: none; border: 0; padding: 10px 0 10px 10px; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+h2 { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(28px, 8vw, 36px); line-height: 1.12; text-wrap: balance; }
+h3 { margin: 0; font-weight: 600; font-size: 15px; }
+p { margin: 0; }
+.spalte { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.knopf { appearance: none; width: 100%; min-height: 50px; padding: 10px 16px; border: 0; border-radius: 6px; background: var(--knopf); color: #fff; font-weight: 600; }
+.knopf:disabled { background: var(--sand); color: var(--tinte); cursor: default; }
+.knopf.hell { background: var(--papier); color: var(--tinte); border: 1px solid var(--sand); font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { appearance: none; border: 1px solid var(--sand); background: var(--papier); border-radius: 20px; padding: 8px 14px; font-size: 14px; }
+.chip.an { background: var(--tanne); border-color: var(--tanne); color: #fff; }
+.feld { width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid var(--sand); border-radius: 6px; background: var(--papier); font-size: 16px; }
+.feld::placeholder { color: #7a725f; }
+textarea.feld { resize: none; min-height: 120px; font-weight: 500; line-height: 26px; }
+label { font-size: 14px; font-weight: 500; display: flex; flex-direction: column; gap: 6px; }
+.platz { border: 1px dashed var(--taupe); border-radius: 6px; padding: 12px 14px; font-size: 14px; background: var(--papier); display: flex; gap: 10px; align-items: center; }
+.platz svg { width: 22px; height: 22px; flex: none; color: var(--taupe); }
+.satz { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 21px; line-height: 1.35; text-align: center; color: var(--tanne); text-wrap: balance; }
+.karte { background: var(--papier); border: 1px solid var(--gold); border-radius: 8px; padding: 22px 18px; min-height: 120px; display: flex; align-items: center; justify-content: center; animation: auf .5s ease both; }
+.bild { width: min(56vw, 210px); align-self: center; border-radius: 12px; display: block; box-shadow: 0 6px 18px rgba(52,77,89,.25); }
+.hinweis { font-size: 13px; text-align: center; }
+.einladung { background: var(--papier); border-left: 3px solid var(--gold); padding: 18px 18px; font-size: 15px; }
+.einladung h3 { margin: 0; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 21px; color: var(--tanne); }
+.ergebnis { background: var(--papier); border: 1px solid var(--gold); border-radius: 8px; padding: 18px; display: flex; flex-direction: column; gap: 12px; animation: auf .5s ease both; }
+.ergebnis h3 { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 22px; color: var(--tanne); }
+.ergebnis-zeile { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; }
+.ergebnis-zeile b { font-weight: 600; display: block; }
+.ergebnis-zeile::before { content: '✦\FE0E'; color: var(--gold); flex: none; }
+.schwer-leiste { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--creme); border-top: 1px solid var(--sand); padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px)); padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); display: flex; justify-content: center; }
+#schwerKnopf { appearance: none; width: 100%; max-width: 484px; min-height: 46px; background: var(--papier); border: 1px solid var(--beere); color: var(--beere); border-radius: 6px; font-weight: 600; font-size: 15px; }
+#schwer { position: fixed; inset: 0; z-index: 30; background: var(--creme); overflow-y: auto; padding-top: env(safe-area-inset-top, 0px); }
+#staub { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }
+
+/* Einzelne Türchen */
+.atem-wrap { background: var(--papier); border: 1px solid var(--sand); border-radius: 8px; overflow: hidden; }
+.atem-wrap canvas { display: block; width: 100%; height: 170px; }
+.atem-wort { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 26px; text-align: center; color: var(--tanne); min-height: 40px; }
+.wetter { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.wetter button { appearance: none; background: var(--papier); border: 1px solid var(--sand); border-radius: 8px; padding: 12px 2px; font-size: 12px; font-weight: 500; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.wetter button span { font-size: 30px; line-height: 1.1; }
+.wetter button.an { border-color: var(--gold); background: var(--licht); }
+.kartenstapel { align-self: center; width: 230px; height: 330px; perspective: 1000px; position: relative; }
+.spielkarte { appearance: none; padding: 0; border: 0; background: none; position: absolute; inset: 0; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.4,.1,.3,1); }
+.spielkarte.um { transform: rotateY(180deg); }
+.seite-k { position: absolute; inset: 0; border-radius: 14px; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; color: #fbf7ec; box-shadow: 0 8px 20px rgba(52,77,89,.25); }
+.seite-k.ruecken { background: var(--tanne); }
+.seite-k.front { transform: rotateY(180deg); flex-direction: column; gap: 16px; }
+.seite-k::after { content: ''; position: absolute; inset: 9px; border: 1px solid rgba(243,227,187,.55); border-radius: 9px; pointer-events: none; }
+.seite-k svg { width: 58px; height: 58px; color: var(--licht); flex: none; }
+.seite-k p { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 19px; line-height: 1.32; text-align: center; text-wrap: balance; }
+.keks { appearance: none; background: none; border: 0; padding: 0; align-self: center; width: 260px; height: 170px; position: relative; }
+.keks-h { position: absolute; left: 0; right: 0; top: 0; text-align: center; font-size: 132px; line-height: 170px; font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; transition: transform .7s cubic-bezier(.4,.1,.3,1); }
+.keks-h.l { clip-path: inset(0 50% 0 0); }
+.keks-h.r { clip-path: inset(0 0 0 50%); }
+.keks.auf .keks-h.l { transform: translate(-22px,6px) rotate(-14deg); }
+.keks.auf .keks-h.r { transform: translate(22px,6px) rotate(14deg); }
+.zettel-keks { position: relative; align-self: center; max-width: 330px; background: #fffdf6; border: 1px solid var(--sand); box-shadow: 0 2px 8px rgba(91,84,68,.18); padding: 12px 22px; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 19px; line-height: 1.35; color: var(--beere); text-align: center; animation: zettel .7s .25s cubic-bezier(.3,.7,.3,1) both; transform-origin: top center; }
+@keyframes zettel { from { opacity: 0; transform: translateY(-46px) scaleY(.3); } to { opacity: 1; transform: none; } }
+.rubbel { position: relative; height: 150px; border-radius: 8px; overflow: hidden; background: var(--papier); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 14px; }
+.rubbel canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
+.wisch { touch-action: pan-y; user-select: none; -webkit-user-select: none; transition: transform .25s ease, opacity .25s ease; cursor: grab; }
+.zwei { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.kugel-wrap { align-self: center; position: relative; width: 270px; }
+.kugel { width: 270px; height: 270px; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 32% 26%, rgba(255,255,255,.95) 0 8%, rgba(255,255,255,.35) 18%, transparent 30%), radial-gradient(circle at 50% 55%, #f4f8f5, #dbe7e0 72%, #c3d4ca); border: 3px solid rgba(255,255,255,.9); box-shadow: inset 0 -14px 30px rgba(63,92,74,.18), inset 8px 8px 24px rgba(255,255,255,.7), 0 10px 24px rgba(91,84,68,.18); position: relative; box-sizing: border-box; z-index: 1; }
+.kugel canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.kugel svg { position: absolute; left: 50%; bottom: 6px; width: 110px; transform: translateX(-50%); }
+.kugel-satz { position: absolute; left: 12%; right: 12%; top: 10%; bottom: 24%; margin: 0; display: flex; align-items: center; justify-content: center; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 16px; line-height: 1.3; text-align: center; color: var(--tanne); text-wrap: balance; }
+.sockel { height: 44px; width: 190px; margin: -22px auto 0; background: linear-gradient(180deg, #a2977f, #8d846f 55%, #6f6753); clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%); border-radius: 0 0 10px 10px; position: relative; }
+.wunsch-zeile { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 8px; align-items: center; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 19px; color: var(--tanne); }
+.memory { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.mem { appearance: none; aspect-ratio: 1; border: 1px solid var(--gold); background: var(--tanne); border-radius: 6px; color: transparent; font-size: 26px; transition: background-color .25s; }
+.mem.zu-sehen { background: var(--papier); color: var(--tanne); }
+.mem.fertig { background: var(--licht); color: var(--tanne); border-color: var(--licht); }
+.mem-satz { min-height: 96px; display: flex; align-items: center; justify-content: center; background: var(--papier); border: 1px solid var(--gold); border-radius: 8px; padding: 12px 16px; }
+.mem-satz .satz { font-size: 20px; }
+.puzzle { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.teil { appearance: none; min-height: 72px; border: 1px solid var(--sand); background: var(--papier); border-radius: 6px; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 23px; color: var(--tanne); }
+.teil.wahl { border-color: var(--beere); background: #f6ece6; }
+.teil.richtig { background: var(--licht); border-color: var(--gold); }
+.zeile-sort { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px; align-items: center; font-size: 14px; padding-block: 4px; border-bottom: 1px solid var(--sand); }
+.mini { appearance: none; border: 1px solid var(--sand); background: var(--papier); border-radius: 14px; padding: 5px 10px; font-size: 12px; }
+.mini.an { background: var(--tanne); color: #fff; border-color: var(--tanne); }
+.kerze-wrap { appearance: none; background: none; border: 0; align-self: center; width: 120px; height: 200px; position: relative; }
+.kerze { position: absolute; left: 41px; bottom: 0; width: 38px; height: 120px; background: linear-gradient(90deg, #f6efe0, #e8dcc3); border: 1px solid var(--sand); border-radius: 3px; }
+.docht { position: absolute; left: 59px; bottom: 120px; width: 2px; height: 10px; background: var(--tinte); }
+.flamme { position: absolute; left: 49px; bottom: 126px; width: 22px; height: 38px; border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%; background: radial-gradient(circle at 50% 70%, #fff3bf, #e7b04a 60%, #c9702f); animation: flacker 1.3s ease-in-out infinite; transform-origin: 50% 90%; }
+@keyframes flacker { 0%,100% { transform: scale(1) rotate(-1deg); } 50% { transform: scale(1.06,.96) rotate(1.5deg); } }
+.rauch { position: absolute; left: 54px; bottom: 132px; width: 12px; height: 12px; border-radius: 50%; background: var(--taupe); opacity: 0; }
+.rauch.los { animation: rauch 2.2s ease-out forwards; }
+@keyframes rauch { 0% { opacity: .55; transform: translate(0,0) scale(.6); } 100% { opacity: 0; transform: translate(10px,-90px) scale(2.6); } }
+.koffer { position: relative; margin-top: 26px; min-height: 150px; background: #efe6d0; border: 2px solid var(--taupe); border-radius: 14px; padding: 14px; display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start; align-items: flex-start; transition: background-color .2s; }
+.koffer::before { content: ''; position: absolute; left: 50%; top: -24px; width: 76px; height: 22px; margin-left: -38px; border: 3px solid var(--taupe); border-bottom: 0; border-radius: 8px 8px 0 0; box-sizing: border-box; }
+.koffer.drueber { background: #e6d9b8; }
+.koffer.zu { justify-content: center; align-items: center; }
+.koffer-leer { font-size: 13px; width: 100%; text-align: center; padding-top: 44px; }
+.im-koffer { background: #fffdf6; border: 1px solid var(--sand); border-radius: 4px; padding: 4px 9px; font-size: 13px; transform: rotate(-1.5deg); }
+.im-koffer:nth-child(even) { transform: rotate(1.5deg); }
+.zettel { touch-action: none; user-select: none; -webkit-user-select: none; position: relative; }
+.zettel.zieht { z-index: 50; box-shadow: 0 6px 14px rgba(91,84,68,.3); }
+.umschlaege { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.umschlag { appearance: none; aspect-ratio: 4 / 3; background: #f4ecd8; border: 1px solid var(--gold); border-radius: 6px; font-size: 12px; font-weight: 500; padding: 6px; position: relative; overflow: hidden; }
+.umschlag::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 46%; background: linear-gradient(to bottom right, transparent 49.5%, var(--gold) 50%, transparent 50.5%) left/50% 100% no-repeat, linear-gradient(to bottom left, transparent 49.5%, var(--gold) 50%, transparent 50.5%) right/50% 100% no-repeat; }
+.umschlag span { position: relative; display: block; padding-top: 34%; }
+.umschlag.an { background: var(--licht); }
+.brief { background: #fffdf6; border: 1px solid var(--sand); border-radius: 4px; padding: 18px; font-size: 15px; animation: auf .5s ease both; box-shadow: 0 2px 8px rgba(91,84,68,.12); }
+.brief .gruss { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 20px; color: var(--tanne); margin-top: 8px; }
+.einladung.spalte { gap: 10px; }
+.cta { display: block; box-sizing: border-box; text-align: center; line-height: 30px; text-decoration: none; }
+.kerze-wrap { height: 250px; width: 140px; overflow: visible; }
+.kerze { left: 51px; } .docht { left: 69px; } .flamme { left: 59px; } .rauch { left: 64px; }
+.kerzen-wunsch { position: absolute; left: -70px; right: -70px; top: 46px; margin: 0; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 19px; line-height: 1.3; color: var(--tanne); text-align: center; }
+.kerzen-wunsch.steigt { animation: steigt 2.8s ease-out forwards; }
+@keyframes steigt { to { transform: translateY(-80px); opacity: 0; } }
+.koffer { background-color: #f3e8cf; border: 10px solid #a87a4c; border-radius: 16px; min-height: 170px; padding: 18px 14px; margin-top: 34px; gap: 10px; box-shadow: inset 0 0 0 2px #c9a27a, 0 6px 14px rgba(91,84,68,.18); background-image: linear-gradient(90deg, transparent 21%, rgba(168,122,76,.22) 21%, rgba(168,122,76,.22) 23%, transparent 23%, transparent 77%, rgba(168,122,76,.22) 77%, rgba(168,122,76,.22) 79%, transparent 79%); }
+.koffer::before { top: -34px; width: 88px; height: 28px; margin-left: -44px; border: 7px solid #8a6136; border-bottom: 0; border-radius: 14px 14px 0 0; }
+.koffer.drueber { background-color: #ead9b4; }
+.koffer.zu { min-height: 150px; background-color: #a87a4c; border-color: #8a6136; box-shadow: 0 6px 14px rgba(91,84,68,.25); background-image: linear-gradient(90deg, transparent 21%, #8a6136 21%, #8a6136 24%, transparent 24%, transparent 76%, #8a6136 76%, #8a6136 79%, transparent 79%); }
+.koffer-schild { background: var(--licht); border-radius: 4px; padding: 6px 16px; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 24px; color: var(--tanne); box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+.im-koffer { background: #fbf1c9; border: 0; border-radius: 2px; padding: 9px 12px; font-size: 14px; transform: none; box-shadow: 0 2px 4px rgba(91,84,68,.25); position: relative; animation: kleben .35s ease both; }
+.im-koffer:nth-child(even) { transform: none; }
+.im-koffer::before { content: ''; position: absolute; left: 50%; top: -5px; width: 28px; height: 9px; margin-left: -14px; background: rgba(184,151,90,.45); }
+@keyframes kleben { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: none; } }
+/* Glas-Look: weiche Lichter im Hintergrund, mattes Glas davor */
+:root { --hinter: radial-gradient(circle at 12% 18%, rgba(184,151,90,.42), transparent 34%), radial-gradient(circle at 88% 26%, rgba(63,92,74,.30), transparent 38%), radial-gradient(circle at 72% 78%, rgba(243,227,187,.95), transparent 40%), radial-gradient(circle at 18% 82%, rgba(109,138,118,.30), transparent 36%), radial-gradient(circle at 50% 50%, rgba(156,63,58,.10), transparent 45%), linear-gradient(165deg, #f5f0e5, #e8e2d3); --glas: rgba(255,255,255,.46); --glas-rand: rgba(255,255,255,.75); }
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; background: var(--hinter); }
+#blatt, #schwer { background: var(--hinter); }
+.tuer, .karte, .ergebnis, .einladung, .platz, .entwurf, .feld, .chip, .knopf.hell, .mini, .himmel-bild svg, .wetter button, .rubbel, .mem-satz, .teil, .umschlag, .brief, .atem-wrap, .geschenk {
+  background-color: var(--glas); -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3);
+  border: 1px solid var(--glas-rand); box-shadow: 0 8px 24px rgba(91,84,68,.10);
+}
+.chip.an, .mini.an { background-color: var(--tanne); border-color: var(--tanne); color: #fff; }
+.wetter button.an, .teil.richtig, .umschlag.an { background-color: rgba(243,227,187,.85); }
+.fach { background: rgba(243,227,187,.55); border-radius: 14px; }
+.tuer { border-radius: 14px; }
+.tuer.fest { background-color: rgba(251,244,223,.62); border: 1px solid rgba(184,151,90,.75); }
+.tuer.geoeffnet { background-color: rgba(255,255,255,.26); }
+.karte, .ergebnis, .einladung, .platz, .rubbel, .mem-satz, .brief, .atem-wrap { border-radius: 16px; }
+.einladung { border-left: 3px solid var(--gold); }
+.feld, .knopf, .chip { border-radius: 12px; }
+.schwer-leiste { background: rgba(245,240,229,.72); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border-top: 1px solid var(--glas-rand); }
+#schwerKnopf { border-radius: 12px; background: rgba(255,255,255,.6); }
+.himmel-bild svg { border-radius: 16px; }
+.haus { width: min(78vw, 300px); align-self: center; display: block; }
+.haus .fenster { transition: fill .6s ease; }
+.lichter-liste { margin: 0; padding-left: 18px; font-size: 15px; }
+.geschenk-knopf { appearance: none; align-self: center; display: flex; flex-direction: column; align-items: center; gap: 8px; background: none; border: 0; padding: 8px; font-weight: 600; color: var(--tinte); }
+.geschenk-knopf svg { width: 120px; height: 120px; }
+.schritt { display: flex; flex-direction: column; gap: 14px; animation: auf .5s ease both; }
+.audio-box { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background-color: var(--glas); border: 1px solid var(--glas-rand); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.audio-box p { font-size: 14px; font-weight: 500; }
+.audio-box audio { width: 100%; }
+.buch { border-radius: 18px; padding: 22px 20px; min-height: 230px; display: flex; flex-direction: column; gap: 12px; background-color: var(--glas); border: 1px solid var(--glas-rand); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 8px 24px rgba(91,84,68,.10); animation: auf .4s ease both; }
+.buch h3 { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 24px; color: var(--tanne); }
+.buch ul { margin: 0; padding-left: 18px; font-size: 15px; display: flex; flex-direction: column; gap: 6px; }
+.buch-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.buch-nav .mini { padding: 8px 14px; font-size: 14px; }
+.buch-punkte { display: flex; gap: 6px; }
+.buch-punkte i { width: 7px; height: 7px; border-radius: 50%; background: var(--sand); }
+.buch-punkte i.an { background: var(--gold); }
+.zwischentitel { margin: 8px 0 0; font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; }
+.brief-text p + p { margin-top: 10px; }
+.einleitung { margin: 0; font-size: 15px; max-width: 44ch; text-wrap: balance; }
+.weiter-karte h3 { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 22px; color: var(--tanne); }
+.himmel-bild svg .funkeln { animation: funkeln .7s ease both; transform-box: fill-box; transform-origin: center; }
+.himmel-bild svg .linie-neu { animation: linie 1s ease both; }
+@keyframes funkeln { from { opacity: 0; transform: scale(.2); } to { opacity: 1; transform: none; } }
+@keyframes linie { from { opacity: 0; } to { opacity: 1; } }
+.satz-wahl { display: flex; flex-direction: column; gap: 8px; }
+.satz-option { appearance: none; width: 100%; text-align: center; padding: 12px 14px; border-radius: 12px; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 16px; color: var(--tanne); background-color: var(--glas); border: 1px solid var(--glas-rand); }
+.satz-option.an { background-color: var(--tanne); color: #fff; border-color: var(--tanne); }
+.chips.raster2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.chips.raster2 .chip { text-align: center; }
+.chip.klein { font-size: 13px; padding: 7px 12px; }
+.speichern { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
+.wunsch-rolle { align-self: center; display: flex; flex-direction: column; align-items: center; gap: 10px; animation: auf .6s ease both; }
+.wunsch-rolle svg { width: 230px; height: auto; }
+.einrollen { animation: einrollen .6s ease forwards; transform-origin: center top; }
+@keyframes einrollen { to { transform: scaleY(.05); opacity: 0; } }
+.papier { background: #fffdf6; border: 1px solid var(--sand); border-radius: 4px; padding: 22px 20px; box-shadow: 0 4px 14px rgba(91,84,68,.14); background-image: repeating-linear-gradient(to bottom, transparent 0 31px, rgba(184,151,90,.18) 31px 32px); line-height: 32px; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 19px; color: var(--tinte); white-space: pre-wrap; animation: auf .5s ease both; }
+.papier .kopf { font-family: var(--display); font-style: normal; font-weight: 600; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--taupe); }
+.antwort { margin-top: -4px; }
+.koffer2 { display: flex; flex-direction: column; margin-top: 34px; perspective: 800px; }
+.koffer-deckel { position: relative; height: 64px; border: 12px solid #9a6b40; border-bottom-width: 5px; border-radius: 18px 18px 4px 4px; background: repeating-linear-gradient(45deg, #efe2c4 0 10px, #f4e9cf 10px 20px); transform-origin: bottom center; transition: transform .7s ease, opacity .7s ease; }
+.koffer-deckel::before { content: ''; position: absolute; left: 50%; top: -34px; width: 84px; height: 24px; margin-left: -42px; border: 7px solid #7a5230; border-bottom: 0; border-radius: 14px 14px 0 0; box-sizing: border-box; }
+.koffer-innen { position: relative; min-height: 160px; border: 12px solid #9a6b40; border-top-width: 5px; border-radius: 4px 4px 18px 18px; background: repeating-linear-gradient(45deg, #efe2c4 0 10px, #f4e9cf 10px 20px); padding: 16px 14px; display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; box-shadow: inset 0 2px 8px rgba(91,84,68,.2); transition: background .5s ease; }
+.koffer-innen .riemen { position: absolute; left: 0; right: 0; height: 9px; background: rgba(122,82,48,.30); pointer-events: none; }
+.koffer2.drueber .koffer-innen { filter: brightness(.96); }
+.koffer-innen .im-koffer { position: relative; z-index: 1; cursor: pointer; }
+.koffer-leer { position: relative; z-index: 1; }
+.koffer2.zu .koffer-deckel { transform: rotateX(-90deg); opacity: 0; }
+.koffer2.geschlossen .koffer-deckel { display: none; }
+.koffer2.geschlossen .koffer-innen { min-height: 170px; border-radius: 18px; border-top-width: 12px; background: #a87346; background-image: linear-gradient(90deg, transparent 22%, #7a5230 22%, #7a5230 26%, transparent 26%, transparent 74%, #7a5230 74%, #7a5230 78%, transparent 78%); justify-content: center; align-items: center; }
+.koffer2.geschlossen .koffer-innen::before { content: ''; position: absolute; left: 50%; top: -46px; width: 84px; height: 30px; margin-left: -42px; border: 7px solid #7a5230; border-bottom: 0; border-radius: 14px 14px 0 0; box-sizing: border-box; }
+.koffer-ecke { position: absolute; width: 22px; height: 22px; background: #c9a76a; border-radius: 6px; }
+.koffer-schloss { position: absolute; top: 10px; width: 20px; height: 14px; background: #d3b26f; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.koffer-anhaenger { position: absolute; right: 18px; top: -18px; transform: rotate(10deg); background: var(--licht); padding: 8px 16px 8px 26px; border-radius: 4px 14px 14px 4px; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 24px; color: var(--tanne); box-shadow: 0 3px 6px rgba(0,0,0,.25); }
+.koffer-anhaenger::before { content: ''; position: absolute; left: 9px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: #a87346; }
+.weihnachts-karte { text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: stretch; padding: 22px 18px; border-radius: 18px; background-color: var(--glas); border: 1px solid var(--glas-rand); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 8px 24px rgba(91,84,68,.12); }
+.weihnachts-karte h3 { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 26px; color: var(--tanne); }
+.weihnachts-karte audio { width: 100%; }
+.geschenk-hinweis { text-align: center; font-weight: 600; font-size: 14px; color: var(--beere); }
+.abschnitt { margin: 14px 0 0; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 28px; color: var(--tanne); text-align: center; }
+.geschenk-buehne { position: relative; display: flex; flex-direction: column; gap: 14px; align-items: stretch; }
+.geschenk-knopf svg .deckel { transition: transform .6s cubic-bezier(.3,1.4,.5,1); transform-box: fill-box; transform-origin: center bottom; }
+.geschenk-knopf.auf svg .deckel { transform: translateY(-26px) rotate(-14deg); }
+.funke { position: absolute; left: 50%; top: 70px; width: 10px; height: 10px; pointer-events: none; animation: funke 1.2s ease-out forwards; }
+@keyframes funke { from { opacity: 1; transform: translate(0,0) scale(1); } to { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(.4); } }
+.geschenk-karte { padding: 22px 18px; border-radius: 18px; background: linear-gradient(160deg, rgba(243,227,187,.95), rgba(255,255,255,.75)); border: 2px solid var(--gold); box-shadow: 0 10px 30px rgba(184,151,90,.35); display: flex; flex-direction: column; gap: 12px; animation: auf .7s .35s ease both; }
+.geschenk-karte h3 { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 28px; color: var(--tanne); text-align: center; }
+.koffer3 { position: relative; width: 100%; max-width: 360px; align-self: center; aspect-ratio: 340 / 300; margin-top: 6px; }
+.koffer3 > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.koffer-fach { position: absolute; left: 17%; top: 58%; width: 66%; height: 31%; justify-content: center; display: flex; flex-wrap: wrap; gap: 5px; align-content: flex-start; padding: 6px; box-sizing: border-box; overflow: hidden; border-radius: 12px; transition: background-color .2s; }
+.koffer3.drueber .koffer-fach { background-color: rgba(184,151,90,.18); }
+.koffer-fach .im-koffer { font-size: 12px; padding: 5px 8px; cursor: pointer; background: #fbf1c9; border-radius: 2px; box-shadow: 0 1px 3px rgba(91,84,68,.3); animation: kleben .3s ease both; }
+.koffer-fach .koffer-leer { margin: auto; padding: 0; font-size: 12px; text-align: center; color: var(--taupe); }
+.koffer-zu { width: 100%; max-width: 300px; align-self: center; display: block; animation: kofferzu .7s ease both; }
+@keyframes kofferzu { from { opacity: 0; transform: translateY(10px) scale(.92); } to { opacity: 1; transform: none; } }
+.koffer3.schliesst { animation: schliessen .45s ease forwards; }
+@keyframes schliessen { to { opacity: 0; transform: scaleX(.5); } }
+.k4 { position: relative; width: 100%; max-width: 340px; align-self: center; aspect-ratio: 300 / 430; perspective: 1100px; margin-top: 4px; }
+.k4-teil { position: absolute; left: 0; width: 100%; }
+.k4-teil svg { display: block; width: 100%; height: 100%; }
+.k4-deckel { top: 0; height: 47%; transform-origin: 50% 104%; transform-style: preserve-3d; transition: transform 1s cubic-bezier(.45,.05,.3,1); z-index: 2; }
+.k4-flaeche { position: absolute; inset: 0; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.k4-flaeche.aussen { transform: rotateX(180deg); }
+.k4-scharnier { top: 47.2%; height: 4%; display: flex; justify-content: center; align-items: center; }
+.k4-boden { top: 51.4%; height: 47.6%; }
+.k4.zu .k4-deckel { transform: rotateX(-180deg); }
+.k4 .koffer-fach { left: 8%; top: 9%; width: 78%; height: 80%; justify-content: center; align-content: center; }
+.k4-weg { animation: k4weg .5s ease forwards; }
+@keyframes k4weg { to { opacity: 0; transform: scale(.85); } }
+.koffer-zu { max-width: 220px; }
+@media (prefers-reduced-motion: reduce) { .k4-deckel { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .tuer, .wisch, .spielkarte, .keks-h { transition: none; } .blatt-innen, .karte, .zettel-keks, .ergebnis, .brief { animation: none; } .flamme { animation: none; } }
+.audio-karte { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 18px; background: linear-gradient(135deg, rgba(63,92,74,.95), rgba(52,77,89,.95)); color: #fff; box-shadow: 0 8px 22px rgba(52,77,89,.25); }
+.audio-karte .play { appearance: none; flex: none; width: 54px; height: 54px; border-radius: 50%; border: 0; background: var(--licht); color: var(--tanne); display: flex; align-items: center; justify-content: center; }
+.audio-karte .play svg { width: 22px; height: 22px; }
+.audio-karte .infos { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.audio-karte .titel { font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 20px; line-height: 1.2; }
+.audio-karte .unter-t { font-size: 12px; opacity: .8; }
+.audio-karte .leiste { height: 4px; border-radius: 4px; background: rgba(255,255,255,.25); overflow: hidden; }
+.audio-karte .leiste i { display: block; height: 100%; width: 0; background: var(--licht); }
+.wisch-hinweis { position: absolute; top: 10px; font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 999px; opacity: 0; transition: opacity .15s; pointer-events: none; }
+.wisch-hinweis.links { left: 10px; background: #f2e2df; color: var(--beere); }
+.wisch-hinweis.rechts { right: 10px; background: #e2ece5; color: var(--tanne); }
+.karte.wisch { position: relative; }
+.kursiv-links { font-style: italic; text-align: left; font-size: 13px; }
+.zettel-keks { font-size: 18px !important; }
+.kugel-satz { font-size: 12px !important; line-height: 1.35 !important; text-align: center !important; left: 18% !important; right: 18% !important; }
+.unten-zurueck { margin-top: 8px; }
+.schwer-oben { appearance: none; background: none; border: 1px solid var(--beere); color: var(--beere); border-radius: 999px; font-size: 13px; font-weight: 600; padding: 6px 12px; }
+.blatt-kopf .knoepfe { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.im-koffer::before { display: none !important; }
+.koffer-fach .im-koffer { animation: none !important; background: rgba(255,255,255,.85) !important; border-radius: 8px !important; box-shadow: none !important; border: 1px solid var(--sand); }
+.zettel { border-radius: 10px !important; }
+.satz-option { white-space: pre-line; }
+.einladung .knopf.cta { background: var(--petrol); border-color: var(--petrol); color: #fff; }
+.schwer-unten { appearance: none; width: 100%; min-height: 46px; border-radius: 12px; border: 1px solid var(--beere); background: rgba(255,255,255,.6); color: var(--beere); font-weight: 600; font-size: 15px; margin-top: 6px; }
+.frage-karte { background: var(--papier); border: 1px solid var(--gold); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.frage-karte p { margin: 0; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 19px; color: var(--tanne); text-align: center; }
+.stiefel { appearance: none; border: 0; background: none; font-size: 96px; line-height: 1; align-self: center; transition: transform .3s; }
+.stiefel:active { transform: scale(.94) rotate(-6deg); }
+#blattInnen .einladung { margin-top: 18px; }
+.stiefel-svg { width: 150px; height: auto; display: block; }
+.stiefel { font-size: 0 !important; }
+a.schwer-unten { display: flex; align-items: center; justify-content: center; text-align: center; text-decoration: none; box-sizing: border-box; padding: 10px 14px; line-height: 1.35; }
+/* Anmeldung (Zugang zum Kalender) */
+body.gesperrt main.seite { display: none; }
+.zugang { max-width: 460px; margin: 0 auto; padding: 28px 20px 40px; }
+.zugang-karte { background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.7); border-radius: 18px; padding: 20px 18px; }
+.zugang label.lb { display: block; gap: 0; font-size: 14px; color: var(--tinte); margin: 14px 0 6px; font-weight: 500; }
+.zugang .fehler { font-size: 13px; color: var(--beere); margin: 6px 0 0; min-height: 0; }
+.zugang .check { display: flex; flex-direction: row; font-weight: 400; gap: 12px; align-items: flex-start; font-size: 13px; line-height: 1.5; margin: 18px 0 4px; cursor: pointer; }
+.zugang .check input { flex: none; width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--tanne); }
+.zugang .info { font-size: 12px; line-height: 1.5; color: #6f6753; margin: 14px 0 0; }
+.zugang .info a, .zugang .check a { color: var(--tinte); }
+/* Audit-Fixes */
+.tuer { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.ig-hinweis { margin: 0; font-size: 13px; text-align: center; background: var(--licht); border-radius: 12px; padding: 10px 14px; }
+</style>
+</head>
+<body>
+
+<section class="zugang" id="zugang" hidden aria-labelledby="zugangTitel">
+  <header class="hero">
+    <h1 id="zugangTitel">Halt und Richtung im Dezember</h1>
+    <p class="unter">Dein Online-Adventskalender wartet auf dich.</p>
+    <p class="einleitung">Trag deinen Vornamen und deine E-Mail-Adresse ein, dann öffnet sich dein Kalender. Ab dem 1. Dezember wartet jeden Tag ein Türchen auf dich.</p>
+  </header>
+  <form class="zugang-karte" id="zugangForm" novalidate>
+    <label class="lb" for="zName">Vorname</label>
+    <input class="feld" id="zName" name="name" type="text" autocomplete="given-name" maxlength="80" required>
+    <p class="fehler" id="zNameFehler"></p>
+    <label class="lb" for="zMail">E-Mail-Adresse</label>
+    <input class="feld" id="zMail" name="email" type="email" autocomplete="email" maxlength="160" required>
+    <p class="fehler" id="zMailFehler"></p>
+    <label class="check"><input type="checkbox" id="zKontakt" name="kontakt"><span id="zKontaktText">Ja, Yassi von Mindspiration darf mich per E-Mail kontaktieren, zum Beispiel mit Impulsen, Einladungen zu Live-Calls und Angeboten. Diese Einwilligung ist freiwillig und ich kann sie jederzeit widerrufen.</span></label>
+    <p class="fehler" id="zKontaktFehler"></p>
+    <button class="knopf" id="zLos" type="submit" style="margin-top:16px">Kalender öffnen</button>
+    <p class="info">Mit dem Klick auf „Kalender öffnen“ werden dein Vorname und deine E-Mail-Adresse gespeichert, damit du Zugang zum Kalender bekommst. Mehr dazu in der <a href="https://www.mindspiration.co/datenschutz" target="_blank" rel="noopener">Datenschutzerklärung</a>.</p>
+  </form>
+  <p class="fuss"><a href="https://www.mindspiration.co/impressum" target="_blank" rel="noopener">Impressum</a> · <a href="https://www.mindspiration.co/datenschutz" target="_blank" rel="noopener">Datenschutz</a></p>
+</section>
+
+<main class="seite">
+  <header class="hero">
+    <div id="heroKranz"></div>
+    <h1>Halt und Richtung im Dezember</h1>
+    <p class="unter">Halt für die schweren Tage.<br>Richtung für das, was kommt.</p>
+    <p class="einleitung">Jeden Tag ein kleiner Schritt für dich.<br>Und an Heiligabend wartet ein Geschenk auf dich.</p>
+  </header>
+  <p class="entwurf" id="vorschauHinweis" hidden>Vorschau: Alle Türchen sind offen. <a href="?vorschau=0">Vorschau beenden</a></p>
+  <p class="countdown" id="countdown" aria-live="polite"></p>
+  <section class="spalte" aria-label="Die Türchen">
+    <div class="raster" id="raster"></div>
+  </section>
+  <div id="adventHinweis"></div>
+  <section class="himmel" aria-label="Dein Sternbild">
+    <h2 class="block-titel">Dein Sternbild</h2>
+    <p class="himmel-text">Mit jedem Türchen leuchtet ein Stern mehr. Am 24. ist dein Sternbild vollständig.</p>
+    <div id="himmelWahl" class="spalte"></div>
+    <div id="himmel" class="himmel-bild"></div>
+    <p id="himmelName" class="himmel-name" hidden></p>
+    <button class="textknopf" id="beispiel" type="button">So sieht es am 24. aus</button>
+  </section>
+  <p class="himmel-text">Tipp: Speicher den Kalender auf deinem Home-Bildschirm. Dann bleibt alles, was du einträgst, auf deinem Handy.</p>
+  <div class="einladung spalte weiter-karte" id="webinarKarte" hidden><h3>Und nach Weihnachten?</h3><p>Wenn sich dein neues Jahr gerade leer anfühlt und du nicht weißt, wohin es gehen soll: Am 28.12. gestalten wir gemeinsam dein Vision Board, kostenlos und live mit mir.</p><a class="knopf hell cta" id="webinarKnopf" target="_blank" rel="noopener">Zum Vision-Board-Webinar anmelden</a></div>
+  <p class="fuss">@mindspiration_ · <a href="https://www.mindspiration.co/impressum" target="_blank" rel="noopener">Impressum</a> · <a href="https://www.mindspiration.co/datenschutz" target="_blank" rel="noopener">Datenschutz</a></p>
+</main>
+
+<div id="blatt" hidden>
+  <div class="blatt-innen" id="blattInnen"></div>
+  
+</div>
+<div id="schwer" hidden><div class="blatt-innen" id="schwerInnen"></div></div>
+<canvas id="staub" aria-hidden="true" hidden></canvas>
+
+<script>
+(function () {
+  'use strict';
+  var ruhig = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* LINKS: Ein leerer Link blendet den passenden Knopf aus.
+     webinar: Anmeldelink zum Vision-Board-Webinar am 28.12. HIER EINTRAGEN (schaltet 8 Einladungen frei)
+     klarheit / warteliste: die zwei Knöpfe im Geschenk an Heiligabend HIER EINTRAGEN */
+  var LINKS = {
+    "community": "https://www.mindspiration.co/bestellung",
+    "call": "https://calendly.com/yaaaaaassi/wegweiser-call",
+    "webinar": "",
+    "klarheit": "",
+    "warteliste": ""
+  };
+  /* Jeder Knopf bekommt eine Markierung, aus welchem Türchen er geklickt wurde (utm_content=tuer-7).
+     Calendly speichert das bei jeder Buchung. */
+  var offeneNr = 0;
+  function mitUtm(url) {
+    try { var u = new URL(url); u.searchParams.set('utm_source', 'adventskalender'); u.searchParams.set('utm_medium', 'tuerchen'); u.searchParams.set('utm_content', offeneNr ? 'tuer-' + offeneNr : 'startseite'); return u.toString(); } catch (e) { return url; }
+  }
+  /* Welcher Tag ist heute in Deutschland? ?tag=5 simuliert den 5.12., ?vorschau=1 öffnet alles */
+  var such = new URLSearchParams(location.search);
+  var vorschau = false;
+  try { if (such.get('vorschau') === '1') localStorage.setItem('hrd2-vorschau', '1'); if (such.get('vorschau') === '0') localStorage.removeItem('hrd2-vorschau'); vorschau = localStorage.getItem('hrd2-vorschau') === '1'; } catch (e) { vorschau = such.get('vorschau') === '1'; }
+  function heuteBerlin() {
+    var p = {}; new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', year: 'numeric', month: 'numeric', day: 'numeric' }).formatToParts(new Date()).forEach(function (x) { p[x.type] = +x.value; });
+    return p;
+  }
+  var H = heuteBerlin();
+  if (such.get('tag')) { H = { year: 2026, month: 12, day: +such.get('tag') }; if (H.day < 1) H = { year: 2026, month: 11, day: 30 + H.day }; }
+  var OFFEN = vorschau ? 24 : (H.year > 2026 || (H.year === 2026 && H.month === 12 && H.day >= 24)) ? 24 : (H.year === 2026 && H.month === 12) ? H.day : 0;
+  var BIS_START = (H.year === 2026 && H.month === 11) ? 31 - H.day : 0;
+  var $ = function (id) { return document.getElementById(id); };
+
+  function el(tag, attrs, kinder) {
+    var e = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === 'text') e.textContent = attrs[k];
+      else if (k === 'on') Object.keys(attrs.on).forEach(function (n) { e.addEventListener(n, attrs.on[n]); });
+      else if (k === 'class') e.className = attrs[k];
+      else e.setAttribute(k, attrs[k]);
+    });
+    (kinder || []).forEach(function (c) { if (c) e.appendChild(c); });
+    return e;
+  }
+  function knopf(text, fn, cls) { return el('button', { type: 'button', class: 'knopf ' + (cls || ''), text: text, on: { click: fn } }); }
+  function text(t, cls) { return el('p', { text: t, class: cls || '' }); }
+  function mische(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
+  function zufall(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function satzKarte(t) { return el('div', { class: 'karte' }, [el('p', { class: 'satz', text: t })]); }
+  function ergebnis(titel, zeilen) {
+    return el('div', { class: 'ergebnis' }, [el('h3', { text: titel })].concat(zeilen.map(function (z) {
+      var innen = el('div');
+      if (z[0]) innen.appendChild(el('b', { text: z[0] }));
+      if (z[1]) innen.appendChild(el('span', { text: z[1] }));
+      return el('div', { class: 'ergebnis-zeile' }, [innen]);
+    })));
+  }
+
+  /* Speicher: bleibt nur auf ihrem Handy */
+  var speicher = {
+    lies: function (k, d) { try { var v = localStorage.getItem('hrd2-' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    schreib: function (k, v) { try { localStorage.setItem('hrd2-' + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  var besucht = speicher.lies('besucht', {});
+  var meinZeichen = speicher.lies('zeichen', null);
+
+  /* Kranz */
+  function kranz(innen) {
+    var s = '<svg class="kranz" viewBox="0 0 120 120" aria-hidden="true"><g>';
+    function blatt(r, n, rx, ry, farbe, versatz, kipp) {
+      for (var i = 0; i < n; i++) {
+        var a = versatz + i * 360 / n, k = kipp + (i % 3 - 1) * 9;
+        s += '<ellipse cx="60" cy="' + (60 - r) + '" rx="' + rx + '" ry="' + ry + '" fill="' + farbe + '" transform="rotate(' + a + ' 60 60) rotate(' + k + ' 60 ' + (60 - r) + ')"/>';
+      }
+    }
+    blatt(46, 58, 2.1, 7.4, '#3f5c4a', 0, 58);
+    blatt(41, 50, 2.1, 6.8, '#527160', 3, -52);
+    blatt(36, 42, 1.8, 5.4, '#6d8a76', 2, 56);
+    s += '</g>';
+    var pos = function (r, a) { var w = (a - 90) * Math.PI / 180; return [60 + r * Math.cos(w), 60 + r * Math.sin(w)]; };
+    [28, 152, 208, 332].forEach(function (a) { var p = pos(43, a); s += '<ellipse cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" rx="3.1" ry="4.4" fill="#8a6a45" stroke="#6f5436" stroke-width=".5" transform="rotate(' + a + ' ' + p[0].toFixed(1) + ' ' + p[1].toFixed(1) + ')"/>'; });
+    [0, 62, 118, 242, 298].forEach(function (a) { [[0, 42], [6, 44], [-5, 39]].forEach(function (b) { var p = pos(b[1], a + b[0]); s += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="1.7" fill="#9c3f3a"/>'; }); });
+    [44, 90, 136, 224, 270, 316].forEach(function (a) { var p = pos(38, a), x = p[0], y = p[1], r = 2.6, k = .7; s += '<path fill="#d3b26f" d="M' + x + ' ' + (y - r) + 'L' + (x + k) + ' ' + (y - k) + 'L' + (x + r) + ' ' + y + 'L' + (x + k) + ' ' + (y + k) + 'L' + x + ' ' + (y + r) + 'L' + (x - k) + ' ' + (y + k) + 'L' + (x - r) + ' ' + y + 'L' + (x - k) + ' ' + (y - k) + 'Z"/>'; });
+    s += '<g fill="#9c3f3a"><path d="M60 102 C50 92 39 94 42 102 C44 109 54 107 60 102Z"/><path d="M60 102 C70 92 81 94 78 102 C76 109 66 107 60 102Z"/><path d="M58 104 L49 119 L54.5 117 L57 120 L61 105Z"/><path d="M62 104 L71 119 L65.5 117 L63 120 L59 105Z"/><circle cx="60" cy="102" r="3.4"/></g>';
+    if (innen) s += '<text x="60" y="58" text-anchor="middle" dominant-baseline="central" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="300" font-size="' + (String(innen).length > 3 ? 12.5 : 27) + '" fill="#3f5c4a">' + innen + '</text>';
+    return s + '</svg>';
+  }
+  function kranzEl(innen) { var d = document.createElement('div'); d.innerHTML = kranz(innen); return d.firstChild; }
+
+  /* Sternzeichen und Sternbilder (vereinfacht gezeichnet) */
+  /* Sterne: [Rektaszension in Stunden, Deklination in Grad], Linien: Paare von Sternen */
+  var ZEICHEN = [
+    { n: 'Widder', g: '♈', m: 3, t: 21, s: 'Du musst heute nicht kämpfen. Auch stille Schritte bringen dich weiter.', st: [[2.83, 27.26], [2.12, 23.46], [1.91, 20.81], [1.89, 19.29]], li: [[0, 1], [1, 2], [2, 3]] },
+    { n: 'Stier', g: '♉', m: 4, t: 20, s: 'Du darfst es dir weich machen. Ruhe ist gerade kein Stillstand.', st: [[4.60, 16.51], [4.48, 15.87], [4.33, 15.63], [4.38, 17.54], [4.48, 19.18], [5.44, 28.61], [5.63, 21.14], [4.01, 12.49], [3.41, 9.03]], li: [[6, 0], [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [2, 7], [7, 8]] },
+    { n: 'Zwillinge', g: '♊', m: 5, t: 21, s: 'Nicht jeder Gedanke braucht heute eine Antwort.', st: [[7.58, 31.89], [7.76, 28.03], [7.19, 30.25], [6.73, 25.13], [6.38, 22.51], [6.25, 22.51], [7.43, 27.80], [7.34, 21.98], [7.07, 20.57], [6.63, 16.40], [7.30, 16.54], [6.75, 12.90]], li: [[0, 2], [2, 3], [3, 4], [4, 5], [0, 1], [1, 6], [1, 7], [7, 8], [8, 9], [7, 10], [10, 11]] },
+    { n: 'Krebs', g: '♋', m: 6, t: 22, s: 'Dein Zuhause darf auch in dir selbst entstehen.', st: [[8.78, 28.76], [8.72, 21.47], [8.74, 18.15], [8.28, 9.19], [8.97, 11.86]], li: [[0, 1], [1, 2], [2, 3], [2, 4]] },
+    { n: 'Löwe', g: '♌', m: 7, t: 23, s: 'Du musst heute nicht strahlen, um gesehen zu werden.', st: [[9.76, 23.77], [9.88, 26.01], [10.28, 23.42], [10.33, 19.84], [10.12, 16.76], [10.14, 11.97], [11.24, 20.52], [11.24, 15.43], [11.82, 14.57]], li: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [3, 6], [6, 8], [8, 7], [7, 5], [6, 7]] },
+    { n: 'Jungfrau', g: '♍', m: 8, t: 23, s: 'Es muss nicht perfekt sein. Du bist auch so genug.', st: [[11.84, 1.76], [12.33, -0.67], [12.69, -1.45], [12.93, 3.40], [13.04, 10.96], [13.16, -5.54], [13.42, -11.16], [13.58, -0.60], [14.27, -6.00], [14.72, -5.66]], li: [[0, 1], [1, 2], [2, 3], [3, 4], [2, 5], [5, 6], [3, 7], [7, 8], [8, 9], [7, 6]] },
+    { n: 'Waage', g: '♎', m: 9, t: 23, s: 'Du darfst heute zuerst dich selbst fragen, was du willst.', st: [[15.07, -25.28], [14.85, -16.04], [15.28, -9.38], [15.59, -14.79], [15.62, -28.14], [15.64, -29.78]], li: [[0, 1], [1, 2], [2, 3], [3, 1], [3, 4], [4, 5]] },
+    { n: 'Skorpion', g: '♏', m: 10, t: 23, s: 'Du musst nicht alles sofort durchdringen. Auch in der Tiefe darfst du dich ausruhen.', st: [[16.09, -19.81], [16.01, -22.62], [15.98, -26.11], [16.35, -25.59], [16.49, -26.43], [16.60, -28.22], [16.84, -34.29], [16.86, -38.05], [16.91, -42.36], [17.20, -43.24], [17.62, -43.00], [17.79, -40.13], [17.71, -39.03], [17.56, -37.10], [17.51, -37.30]], li: [[0, 1], [1, 2], [1, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10], [10, 11], [11, 12], [12, 13], [13, 14]] },
+    { n: 'Schütze', g: '♐', m: 11, t: 22, s: 'Auch wer die Freiheit liebt, darf heute einfach bleiben.', st: [[18.10, -30.42], [18.35, -29.83], [18.40, -34.38], [18.47, -25.42], [18.76, -26.99], [18.92, -26.30], [19.12, -27.67], [19.04, -29.88], [18.29, -36.76], [18.23, -21.06]], li: [[0, 1], [1, 2], [2, 0], [1, 3], [3, 4], [4, 1], [4, 5], [5, 6], [6, 7], [7, 4], [7, 2], [3, 9], [2, 8]] },
+    { n: 'Steinbock', g: '♑', m: 12, t: 22, s: 'Du musst das heute nicht allein tragen.', st: [[20.30, -12.51], [20.35, -14.78], [20.77, -25.27], [20.86, -26.92], [21.44, -22.41], [21.78, -16.13], [21.67, -16.66], [21.37, -16.83], [21.10, -17.23]], li: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 1]] },
+    { n: 'Wassermann', g: '♒', m: 1, t: 20, s: 'Du darfst anders sein als alle anderen in diesem Dezember.', st: [[20.79, -9.50], [21.53, -5.57], [22.10, -0.32], [22.36, -1.39], [22.48, -0.02], [22.59, -0.12], [22.42, 1.38], [22.28, -7.78], [22.88, -7.58], [22.83, -13.59], [22.91, -15.82], [23.24, -6.05], [23.26, -9.09]], li: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [4, 6], [2, 7], [7, 8], [8, 9], [9, 10], [8, 11], [11, 12]] },
+    { n: 'Fische', g: '♓', m: 2, t: 19, s: 'Was du fühlst, darf da sein. Du musst es heute nicht einordnen.', st: [[23.29, 3.28], [23.47, 6.38], [23.67, 5.63], [23.70, 1.78], [23.45, 1.26], [23.99, 6.86], [0.81, 7.59], [1.05, 7.89], [1.50, 6.14], [1.69, 5.49], [2.03, 2.76], [1.76, 9.16], [1.52, 15.35], [1.23, 24.58], [1.19, 30.09]], li: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [2, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10], [10, 11], [11, 12], [12, 13], [13, 14]], wrap: true }
+  ];
+  var WAGEN = { n: 'Großer Wagen', st: [[13.79, 49.31], [13.40, 54.93], [12.90, 55.96], [12.26, 57.03], [11.06, 61.75], [11.03, 56.38], [11.90, 53.69]], li: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 3]] };
+  /* Liefert ein Zeichen oder bei Geburtstag am Übergang beide zur Auswahl */
+  function findeZeichen(monat, tag) {
+    var i, a, n;
+    for (i = 0; i < 12; i++) {
+      a = ZEICHEN[i]; n = ZEICHEN[(i + 11) % 12];
+      if (monat === a.m && (tag === a.t || tag === a.t - 1)) return [(i + 11) % 12, i];
+    }
+    for (i = 0; i < 12; i++) {
+      a = ZEICHEN[i]; n = ZEICHEN[(i + 1) % 12];
+      if ((monat === a.m && tag >= a.t) || (monat === n.m && tag < n.t)) return [i];
+    }
+    return [9];
+  }
+  function zeichenWahl(ziel, fertig) {
+    ziel.textContent = '';
+    var feld = el('input', { class: 'feld', type: 'date', id: 'geb' + Math.random().toString(36).slice(2, 7), 'aria-label': 'Dein Geburtsdatum' });
+    var aus = el('div', { class: 'spalte' });
+    ziel.appendChild(el('label', { for: feld.id, text: 'Wann hast du Geburtstag?' }));
+    ziel.appendChild(feld);
+    ziel.appendChild(knopf('Weiter', function () {
+      if (!feld.value) { feld.focus(); return; }
+      var t = feld.value.split('-'), z = findeZeichen(+t[1], +t[2]);
+      if (z.length === 1) { fertig(z[0]); return; }
+      aus.textContent = '';
+      aus.appendChild(text('Du bist genau am Übergang geboren. Welches Zeichen fühlt sich nach dir an?'));
+      aus.appendChild(el('div', { class: 'zwei' }, z.map(function (i) { return knopf(ZEICHEN[i].n, function () { fertig(i); }, 'hell'); })));
+    }, 'hell'));
+    ziel.appendChild(aus);
+  }
+  function setzeZeichen(i) { meinZeichen = i; speicher.schreib('zeichen', i); himmel(); }
+  var ohneZeichen = speicher.lies('ohneZeichen', false);
+
+  /* Sternbild: die echten Sterne des Sternbilds, ergänzt um Himmelssterne, damit es 24 Lichter für 24 Tage sind */
+  function sternbild(i) {
+    var Z = (i === null || i === undefined) ? WAGEN : ZEICHEN[i];
+    var st = Z.st.map(function (p) { return [Z.wrap && p[0] > 12 ? p[0] - 24 : p[0], p[1]]; });
+    var mitte = st.reduce(function (a, p) { return a + p[1]; }, 0) / st.length, k = Math.cos(mitte * Math.PI / 180);
+    var xy = st.map(function (p) { return [-p[0] * 15 * k, -p[1]]; });
+    var x0 = Math.min.apply(null, xy.map(function (p) { return p[0]; })), x1 = Math.max.apply(null, xy.map(function (p) { return p[0]; }));
+    var y0 = Math.min.apply(null, xy.map(function (p) { return p[1]; })), y1 = Math.max.apply(null, xy.map(function (p) { return p[1]; }));
+    var mass = Math.min(270 / Math.max(x1 - x0, 1), 135 / Math.max(y1 - y0, 1));
+    var ox = 170 - (x0 + x1) / 2 * mass, oy = 92 - (y0 + y1) / 2 * mass;
+    var echt = xy.map(function (p) { return { x: +(p[0] * mass + ox).toFixed(1), y: +(p[1] * mass + oy).toFixed(1), haupt: true }; });
+    var S = echt.length, tag = echt.map(function (p, n) { return Math.floor((n + 1) * 24 / S) - 1; });
+    var pts = new Array(24), seed = (i === null || i === undefined ? 99 : i) * 7919 + 13;
+    function zuf() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+    echt.forEach(function (p, n) { pts[tag[n]] = p; });
+    for (var d = 0; d < 24; d++) {
+      if (pts[d]) continue;
+      var p, versuche = 0;
+      do { p = { x: +(18 + zuf() * 304).toFixed(1), y: +(14 + zuf() * 157).toFixed(1), haupt: false }; versuche++; }
+      while (versuche < 60 && echt.some(function (e) { return Math.hypot(e.x - p.x, e.y - p.y) < 16; }));
+      pts[d] = p;
+    }
+    return { pts: pts, kanten: Z.li.map(function (l) { return [tag[l[0]], tag[l[1]]]; }), name: Z.n };
+  }
+  function stern(x, y, r, f, cls, delay) { var k = r * .25; return '<path class="' + (cls || '') + '"' + (delay ? ' style="animation-delay:' + delay + 's"' : '') + ' fill="' + f + '" d="M' + x + ' ' + (y - r) + 'L' + (x + k) + ' ' + (y - k) + 'L' + (x + r) + ' ' + y + 'L' + (x + k) + ' ' + (y + k) + 'L' + x + ' ' + (y + r) + 'L' + (x - k) + ' ' + (y + k) + 'L' + (x - r) + ' ' + y + 'L' + (x - k) + ' ' + (y - k) + 'Z"/>'; }
+  function zeichneHimmel(i, an, animiert) {
+    var b = sternbild(i), anz = Object.keys(an).length;
+    var svg = '<svg viewBox="0 0 340 185" role="img" aria-label="Dein Sternbild mit ' + anz + ' von 24 Sternen">';
+    b.kanten.forEach(function (k) { if (an[k[0] + 1] && an[k[1] + 1]) svg += '<line class="' + (animiert ? 'linie-neu' : '') + '"' + (animiert ? ' style="animation-delay:' + (24 * .12 + .2) + 's"' : '') + ' x1="' + b.pts[k[0]].x + '" y1="' + b.pts[k[0]].y + '" x2="' + b.pts[k[1]].x + '" y2="' + b.pts[k[1]].y + '" stroke="#b8975a" stroke-width=".8"/>'; });
+    b.pts.forEach(function (p, n) {
+      if (an[n + 1]) svg += stern(p.x, p.y, p.haupt ? 7 : 3.4, p.haupt ? '#b8975a' : '#d3b26f', animiert ? 'funkeln' : '', animiert ? (n * .12).toFixed(2) : 0);
+      else svg += '<circle cx="' + p.x + '" cy="' + p.y + '" r="1.3" fill="#c9c1ac"/>';
+    });
+    return svg + '</svg>';
+  }
+  var alleAn = {}; for (var a0 = 1; a0 <= 24; a0++) alleAn[a0] = 1;
+  var beispielAn = false;
+  function himmel() {
+    var z = meinZeichen;
+    var ohne = z === null && ohneZeichen;
+    $('himmel').hidden = ohne; $('beispiel').hidden = ohne;
+    if (ohne) { $('himmelWahl').hidden = false; $('himmelName').hidden = true; if (!$('himmelWahl').firstChild) $('himmelWahl').appendChild(el('button', { type: 'button', class: 'textknopf', text: 'Doch mein Sternbild einrichten', on: { click: function () { ohneZeichen = false; speicher.schreib('ohneZeichen', false); $('himmelWahl').textContent = ''; himmel(); } } })); return; }
+    $('himmel').innerHTML = zeichneHimmel(z, beispielAn ? alleAn : besucht);
+    $('beispiel').textContent = beispielAn ? 'Mein Sternbild zeigen' : 'So sieht es am 24. aus';
+    var wahl = $('himmelWahl'), name = $('himmelName');
+    if (z === null && !ohneZeichen) {
+      name.hidden = true; wahl.hidden = false;
+      if (!wahl.firstChild) {
+        wahl.appendChild(text('Trag hier deinen Geburtstag ein, um dein persönliches Sternbild zu bekommen. Er bleibt nur auf deinem Handy.', 'hinweis'));
+        var feld = el('div', { class: 'spalte' }); wahl.appendChild(feld);
+        zeichenWahl(feld, function (i) { wahl.textContent = ''; setzeZeichen(i); });
+        wahl.appendChild(el('button', { type: 'button', class: 'textknopf', text: 'Lieber ohne Geburtstag', on: { click: function () { ohneZeichen = true; speicher.schreib('ohneZeichen', true); wahl.textContent = ''; himmel(); } } }));
+      }
+    }
+    else { wahl.hidden = true; wahl.textContent = ''; name.hidden = false; name.textContent = 'Dein Sternbild: ' + (z === null ? 'Der Große Wagen' : ZEICHEN[z].n); }
+  }
+  $('beispiel').addEventListener('click', function () { beispielAn = !beispielAn; himmel(); });
+
+  function platz(art, t) {
+    var ic = art === 'video' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 11l5-3v8l-5-3"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4" stroke-linecap="round"/></svg>';
+    var d = el('div', { class: 'platz' }); d.innerHTML = ic; d.appendChild(el('span', { text: t })); return d;
+  }
+
+  /* Hintergrundbilder mit echtem Motiv */
+  function umbruch(ctx, t, breite) {
+    var zeilen = [];
+    String(t).split('\n').forEach(function (abs) {
+      var z = '';
+      abs.split(/\s+/).forEach(function (w) { var p = z ? z + ' ' + w : w; if (ctx.measureText(p).width <= breite) z = p; else { if (z) zeilen.push(z); z = w; } });
+      zeilen.push(z);
+    });
+    return zeilen;
+  }
+  function motiv(x, art) {
+    var W = 720, H = 1280, g = x.createLinearGradient(0, 0, 0, H), i, n = 7;
+    function zuf() { n = (n * 9301 + 49297) % 233280; return n / 233280; }
+    if (art === 'sonne') { g.addColorStop(0, '#1f3540'); g.addColorStop(.55, '#37505f'); g.addColorStop(.72, '#7f8488'); g.addColorStop(.84, '#c7ad90'); g.addColorStop(1, '#ddc7a4'); }
+    else if (art === 'tanne') { g.addColorStop(0, '#223a30'); g.addColorStop(1, '#3f5c4a'); }
+    else { g.addColorStop(0, '#1f3540'); g.addColorStop(1, '#344d59'); }
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    if (art === 'sonne') {
+      var gl = x.createRadialGradient(360, 1010, 30, 360, 1010, 460);
+      gl.addColorStop(0, 'rgba(250,236,205,.7)'); gl.addColorStop(.25, 'rgba(240,214,175,.28)'); gl.addColorStop(1, 'rgba(240,214,175,0)');
+      x.fillStyle = gl; x.fillRect(0, 500, W, 780);
+      x.fillStyle = '#f4e6c8'; x.beginPath(); x.arc(360, 1010, 74, 0, 6.3); x.fill();
+      x.fillStyle = '#44584f'; x.beginPath(); x.moveTo(0, 1060); x.bezierCurveTo(160, 980, 300, 1060, 430, 1035); x.bezierCurveTo(540, 1015, 640, 985, 720, 1030); x.lineTo(720, 1280); x.lineTo(0, 1280); x.fill();
+      x.fillStyle = '#26382f'; x.beginPath(); x.moveTo(0, 1140); x.bezierCurveTo(180, 1085, 340, 1170, 500, 1125); x.bezierCurveTo(600, 1100, 670, 1110, 720, 1135); x.lineTo(720, 1280); x.lineTo(0, 1280); x.fill();
+      return;
+    }
+    x.fillStyle = '#f3e3bb';
+    for (i = 0; i < 70; i++) { x.globalAlpha = .25 + zuf() * .7; var sx = zuf() * W, sy = zuf() * (art === 'tanne' ? 900 : H), r = 1 + zuf() * 2.4; x.beginPath(); x.arc(sx, sy, r, 0, 6.3); x.fill(); }
+    x.globalAlpha = 1;
+    if (art === 'tanne') {
+      [[120, 1280, 300], [300, 1280, 420], [520, 1280, 340], [660, 1280, 250], [-10, 1280, 220]].forEach(function (t, j) {
+        x.fillStyle = j % 2 ? '#1a2d25' : '#2a4438';
+        x.beginPath(); x.moveTo(t[0], t[1] - t[2]); x.lineTo(t[0] + t[2] * .34, t[1]); x.lineTo(t[0] - t[2] * .34, t[1]); x.closePath(); x.fill();
+      });
+    } else {
+      x.fillStyle = '#f3e3bb'; x.beginPath(); x.arc(540, 200, 62, 0, 6.3); x.fill();
+      x.fillStyle = '#233a45'; x.beginPath(); x.arc(515, 186, 56, 0, 6.3); x.fill();
+    }
+  }
+  function bild(opt) {
+    var c = document.createElement('canvas'); c.width = 720; c.height = 1280;
+    var x = c.getContext('2d');
+    motiv(x, opt.motiv || 'nacht');
+    x.textAlign = 'center';
+    var farbe = '#fbf7ec', gold = '#f3e3bb', ops = [], h = 0;
+    function plan(hoehe, zeichne) { ops.push({ h: hoehe, z: zeichne }); h += hoehe; }
+    if (opt.zeichen) plan(170, function (y) { x.fillStyle = gold; x.font = '150px Georgia, serif'; x.fillText(opt.zeichen, 360, y + 130); });
+    if (opt.titel) plan(84, function (y) { x.fillStyle = gold; x.font = "600 30px 'Archivo Narrow', Arial, sans-serif"; x.fillText(opt.titel.toUpperCase().split('').join(' '), 360, y + 34); });
+    (opt.teile || []).forEach(function (t, nr) {
+      if (nr) h += 40;
+      if (t.k) plan(52, function (y) { x.font = "500 26px Montserrat, Arial, sans-serif"; x.fillStyle = gold; x.fillText(t.k, 360, y + 28); });
+      var g = t.g || 50;
+      if (!t.s) return;
+      x.font = "italic 500 " + g + "px 'Cormorant Garamond', Georgia, serif";
+      var zeilen = umbruch(x, t.s, 560);
+      plan(zeilen.length * g * 1.3, function (y) {
+        x.fillStyle = farbe; x.font = "italic 500 " + g + "px 'Cormorant Garamond', Georgia, serif";
+        zeilen.forEach(function (z, i) { x.fillText(z, 360, y + g + i * g * 1.3); });
+      });
+      ops[ops.length - 1].abstand = true;
+    });
+    var y = (1280 - h) / 2, frei = 40;
+    ops.forEach(function (o, i) { o.z(y); y += o.h; if (o.abstand && i < ops.length - 1) y += frei; });
+    x.globalAlpha = .45; x.font = "400 18px Montserrat, Arial, sans-serif"; x.fillStyle = gold; x.fillText('@mindspiration_', 360, 1232); x.globalAlpha = 1;
+    var img = el('img', { class: 'bild', alt: 'Dein Hintergrundbild' }); img.src = c.toDataURL('image/png');
+    return el('div', { class: 'spalte' }, [img, speicherKnopf(img.src, 'mindspiration-bild.png')]);
+  }
+  function papierBild(kopf, t) {
+    var c = document.createElement('canvas'), x = c.getContext('2d'); c.width = 720;
+    x.font = "italic 500 32px 'Cormorant Garamond', Georgia, serif";
+    var zeilen = umbruch(x, t, 600), H = Math.max(900, 230 + zeilen.length * 48 + 120); c.height = H;
+    x.fillStyle = '#fffdf6'; x.fillRect(0, 0, 720, H);
+    x.strokeStyle = 'rgba(184,151,90,.25)'; x.lineWidth = 1;
+    for (var y = 230; y < H - 60; y += 48) { x.beginPath(); x.moveTo(60, y + 12); x.lineTo(660, y + 12); x.stroke(); }
+    x.fillStyle = '#8d846f'; x.font = "600 22px 'Archivo Narrow', Arial, sans-serif"; x.fillText(kopf.toUpperCase().split('').join(' '), 60, 140);
+    x.fillStyle = '#5b5444'; x.font = "italic 500 32px 'Cormorant Garamond', Georgia, serif";
+    zeilen.forEach(function (z, i) { x.fillText(z, 60, 230 + i * 48); });
+    return c.toDataURL('image/png');
+  }
+  function speichereBild(url, datei) {
+    try {
+      var bin = atob(url.split(',')[1]), arr = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+      var file = new File([arr], datei, { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file] }).catch(function () {}); return; }
+    } catch (e) {}
+    var a = document.createElement('a'); a.href = url; a.download = datei; document.body.appendChild(a); a.click(); a.remove();
+  }
+  function speicherKnopf(url, datei, label) {
+    return el('div', { class: 'speichern' }, [knopf(label || 'Bild speichern', function () { speichereBild(url, datei); }, 'hell')]);
+  }
+  function gutscheinBild(t) {
+    var c = document.createElement('canvas'), x = c.getContext('2d'), W = 1000, H = 560; c.width = W; c.height = H;
+    x.fillStyle = '#fbf6ea'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#9c3f3a'; x.fillRect(0, 0, 230, H);
+    x.fillStyle = '#fbf6ea'; for (var y = 18; y < H; y += 36) { x.beginPath(); x.arc(230, y, 9, 0, 6.3); x.fill(); }
+    x.strokeStyle = '#b8975a'; x.lineWidth = 3; x.setLineDash([12, 10]); x.strokeRect(262, 30, W - 292, H - 60); x.setLineDash([]);
+    x.save(); x.translate(122, H / 2); x.rotate(-Math.PI / 2); x.textAlign = 'center'; x.fillStyle = '#fbf6ea'; x.font = "700 52px 'Archivo Narrow', Arial, sans-serif"; x.fillText('G U T S C H E I N', 0, 18); x.restore();
+    x.textAlign = 'center'; x.fillStyle = '#8d846f'; x.font = "600 24px 'Archivo Narrow', Arial, sans-serif"; x.fillText('N I K O L A U S   2 0 2 6', 615, 100);
+    x.fillStyle = '#3f5c4a'; x.font = "italic 500 46px 'Cormorant Garamond', Georgia, serif";
+    umbruch(x, t, 600).forEach(function (z, i, a) { x.fillText(z, 615, 230 + i * 58 - (a.length - 1) * 29); });
+    x.fillStyle = '#5b5444'; x.font = "500 22px Montserrat, Arial, sans-serif"; x.textAlign = 'left';
+    x.fillText('Für: mich', 300, 450); x.fillText('Von: mir', 640, 450);
+    x.strokeStyle = 'rgba(91,84,68,.35)'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(300, 462); x.lineTo(580, 462); x.moveTo(640, 462); x.lineTo(930, 462); x.stroke();
+    x.textAlign = 'center'; x.fillStyle = '#8d846f'; x.font = "400 18px Montserrat, Arial, sans-serif"; x.fillText('Einzulösen in den nächsten Tagen · @mindspiration_', 615, 505);
+    var img = el('img', { class: 'bild', alt: 'Dein Gutschein', style: 'width:100%;max-width:none;border-radius:12px' }); img.src = c.toDataURL('image/png');
+    return el('div', { class: 'spalte' }, [img, speicherKnopf(img.src, 'gutschein.png', 'Gutschein speichern')]);
+  }
+  var STIEFEL = '<svg class="stiefel-svg" viewBox="0 0 160 200" aria-hidden="true"><path d="M78 2 v18" stroke="#9c3f3a" stroke-width="5" stroke-linecap="round"/><path d="M42 52 h86 v62 c0 10 4 16 10 22 c14 14 14 44 -10 50 c-20 5 -42 4 -66 -6 c-22 -9 -38 -22 -42 -38 c-4 -16 8 -28 22 -26 V52z" fill="#b8302a"/><path d="M42 52 h86 v62 c0 10 4 16 10 22 c14 14 14 44 -10 50 c-20 5 -42 4 -66 -6 c-22 -9 -38 -22 -42 -38 c-4 -16 8 -28 22 -26 V52z" fill="url(#stS)"/><defs><linearGradient id="stS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="rgba(0,0,0,.12)"/><stop offset=".5" stop-color="rgba(255,255,255,0)"/><stop offset="1" stop-color="rgba(0,0,0,.15)"/></linearGradient></defs><rect x="42" y="96" width="86" height="20" fill="#1f1f1f"/><rect x="72" y="90" width="30" height="32" rx="3" fill="none" stroke="#c9a83f" stroke-width="7"/><rect x="34" y="14" width="102" height="42" rx="14" fill="#fbfaf6"/><path d="M38 24 q10 -6 20 0 q10 6 20 0 q10 -6 20 0 q10 6 20 0 q8 -5 14 0" stroke="#e8e4da" stroke-width="3" fill="none"/><path d="M38 44 q10 -6 20 0 q10 6 20 0 q10 -6 20 0 q10 6 20 0 q8 -5 14 0" stroke="#e8e4da" stroke-width="3" fill="none"/></svg>';
+  function listenBild(kopf, zeilen) { return papierBild(kopf, zeilen.map(function (z) { return '· ' + z; }).join('\n')); }
+
+  /* Gedanken auflösen */
+  function loese(feld, fertig) {
+    var inhalt = feld.value; feld.blur();
+    setTimeout(function () {
+      if (ruhig) { feld.value = ''; fertig(); return; }
+      var staub = $('staub'); staub.hidden = false;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2), w = innerWidth, h = innerHeight;
+      staub.width = w * dpr; staub.height = h * dpr;
+      var ctx = staub.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var r = feld.getBoundingClientRect(), off = document.createElement('canvas');
+      off.width = staub.width; off.height = staub.height;
+      var o = off.getContext('2d', { willReadFrequently: true }); o.scale(dpr, dpr);
+      o.font = "500 16px Montserrat, Arial, sans-serif"; o.textBaseline = 'top'; o.fillStyle = '#000';
+      umbruch(o, inhalt, r.width - 30).forEach(function (z, i) { o.fillText(z, r.left + 15, r.top + 16 + i * 26); });
+      var d = o.getImageData(0, 0, off.width, off.height).data, sch = Math.max(1, Math.round(dpr)), t = [];
+      function sammle() { t = []; for (var yy = 0; yy < off.height; yy += sch) for (var xx = 0; xx < off.width; xx += sch) if (d[(yy * off.width + xx) * 4 + 3] > 120) t.push([xx / dpr, yy / dpr]); }
+      sammle(); while (t.length > 9000) { sch++; sammle(); }
+      var g = sch / dpr + .25;
+      var feldT = t.map(function (p) { return { x: p[0], y: p[1], st: ((p[0] - r.left) / r.width) * 1100 + Math.random() * 500, da: 1300 + Math.random() * 1300, vx: 8 + Math.random() * 42, vy: -(26 + Math.random() * 74), ph: Math.random() * 6.28 }; });
+      feld.value = ''; feld.style.visibility = 'hidden';
+      var t0 = performance.now();
+      (function run() {
+        var z = performance.now() - t0, aktiv = false;
+        ctx.clearRect(0, 0, w, h); ctx.fillStyle = '#5b5444';
+        for (var i = 0; i < feldT.length; i++) {
+          var f = feldT[i], q = z - f.st;
+          if (q < 0) { ctx.globalAlpha = 1; ctx.fillRect(f.x, f.y, g, g); aktiv = true; continue; }
+          if (q > f.da) continue;
+          aktiv = true; var s = q / 1000, a = q / f.da;
+          ctx.globalAlpha = (1 - a) * (1 - a);
+          ctx.fillRect(f.x + f.vx * s + Math.sin(f.ph + s * 2.4) * 7, f.y + f.vy * s * (1 + a * .7), g, g);
+        }
+        ctx.globalAlpha = 1;
+        if (aktiv) requestAnimationFrame(run); else { staub.hidden = true; feld.style.visibility = ''; fertig(); }
+      })();
+    }, ruhig ? 0 : 340);
+  }
+  function aufloeser(frage, platzhalter, dann) {
+    var box = el('div', { class: 'spalte' });
+    function start() {
+      box.textContent = '';
+      var feld = el('textarea', { class: 'feld', id: 'gedanke', maxlength: '300', placeholder: platzhalter, 'aria-label': frage, autocomplete: 'off', spellcheck: 'false' });
+      var los = knopf('Gedanken auflösen', function () {
+        if (!feld.value.trim()) return; los.disabled = true;
+        loese(feld, function () {
+          box.textContent = '';
+          box.appendChild(satzKarte(Array.isArray(dann) ? zufall(dann) : dann));
+          box.appendChild(text('Wenn der Gedanke wiederkommt, ist das okay. Du kannst ihn hier so oft loslassen, wie du möchtest.'));
+          box.appendChild(knopf('Noch einen Gedanken auflösen', start, 'hell'));
+        });
+      });
+      los.disabled = true;
+      feld.addEventListener('input', function () { los.disabled = !feld.value.trim(); });
+      box.appendChild(feld); box.appendChild(los);
+    }
+    start();
+    return box;
+  }
+
+  /* Atmen als Linie: Hoch heißt einatmen, runter heißt ausatmen. Man sieht, was als Nächstes kommt. */
+  function atemBox(sek) {
+    var EIN = 4, AUS = 8, ZYK = EIN + AUS;
+    var box = el('div', { class: 'spalte' });
+    var cv = el('canvas', { 'aria-hidden': 'true' }), wort = el('p', { class: 'atem-wort', text: 'Bereit?' }), wrap = el('div', { class: 'atem-wrap' }, [cv]);
+    box.appendChild(wort); box.appendChild(wrap);
+    var raf = null;
+    function welle(t) { var p = ((t % ZYK) + ZYK) % ZYK; if (p < EIN) return .5 - .5 * Math.cos(Math.PI * p / EIN); return .5 + .5 * Math.cos(Math.PI * (p - EIN) / AUS); }
+    function male(zeit, lauf) {
+      var q = wrap.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2), W = q.width || 320, H = 170;
+      if (cv.width !== Math.round(W * d)) { cv.width = Math.round(W * d); cv.height = H * d; }
+      var x = cv.getContext('2d'); x.setTransform(d, 0, 0, d, 0, 0); x.clearRect(0, 0, W, H);
+      var fest = W * .3, proPx = 20 / W, ob = 30, un = H - 30, y = function (t) { return un - (un - ob) * welle(t); };
+      x.lineWidth = 2; x.lineCap = 'round';
+      x.strokeStyle = '#dbd4c2'; x.beginPath(); for (var px = 0; px <= fest; px += 2) { var ty = y(zeit + (px - fest) * proPx); if (px === 0) x.moveTo(px, ty); else x.lineTo(px, ty); } x.stroke();
+      x.strokeStyle = '#3f5c4a'; x.beginPath(); for (px = fest; px <= W; px += 2) { var ty2 = y(zeit + (px - fest) * proPx); if (px === fest) x.moveTo(px, ty2); else x.lineTo(px, ty2); } x.stroke();
+      x.fillStyle = '#b8975a'; x.beginPath(); x.arc(fest, y(zeit), 9, 0, 6.3); x.fill();
+      x.strokeStyle = '#fff'; x.lineWidth = 2; x.stroke();
+    }
+    var klang = null, mitKlang = el('input', { type: 'checkbox', id: 'klang' + Math.random().toString(36).slice(2, 6) });
+    function klangAn() {
+      try {
+        var C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+        var ac = new C(), g = ac.createGain(); g.gain.value = 0; g.connect(ac.destination);
+        [396, 528, 660, 792].forEach(function (f, i) { var o = ac.createOscillator(); o.type = 'sine'; o.frequency.value = f; o.detune.value = (i % 2 ? 4 : -4); var og = ac.createGain(); og.gain.value = [0.45, 0.35, 0.18, 0.08][i]; var lfo = ac.createOscillator(), lg = ac.createGain(); lfo.frequency.value = 0.08 + i * 0.03; lg.gain.value = og.gain.value * 0.5; lfo.connect(lg); lg.connect(og.gain); lfo.start(); o.connect(og); og.connect(g); o.start(); });
+        g.gain.linearRampToValueAtTime(0.035, ac.currentTime + 4);
+        klang = { ac: ac, g: g };
+      } catch (e) {}
+    }
+    function klangAus() { if (!klang) return; var k = klang; klang = null; try { k.g.gain.linearRampToValueAtTime(0, k.ac.currentTime + 1.2); setTimeout(function () { k.ac.close(); }, 1400); } catch (e) {} }
+    function stopp(fertig) { if (raf) cancelAnimationFrame(raf); raf = null; klangAus(); stoppK.hidden = true; start.hidden = false; start.textContent = 'Noch einmal beginnen'; wort.textContent = fertig ? 'Schön, dass du da bist.' : 'Pausiert. Du kannst jederzeit neu beginnen.'; }
+    var stoppK = knopf('Stoppen', function () { stopp(false); }, 'hell'); stoppK.hidden = true;
+    var start = knopf('Beginnen', function () {
+      start.hidden = true; stoppK.hidden = false;
+      if (mitKlang.checked) klangAn();
+      var t0 = performance.now();
+      (function lauf() {
+        var t = (performance.now() - t0) / 1000;
+        if (t >= sek) { male(sek, false); stopp(true); return; }
+        wort.textContent = (t % ZYK) < EIN ? 'Einatmen' : 'Ausatmen';
+        male(t, true);
+        raf = requestAnimationFrame(lauf);
+      })();
+    });
+    mitKlang.setAttribute('style', 'width:auto;margin:0;flex:none'); box.appendChild(el('label', { for: mitKlang.id, class: 'hinweis', style: 'display:flex;flex-direction:row;gap:8px;align-items:center;justify-content:center' }, [mitKlang, document.createTextNode('Mit sanftem Klang (Ton an)')]));
+    box.appendChild(start); box.appendChild(stoppK);
+    requestAnimationFrame(function () { male(0, false); });
+    aufraeumen.push(function () { if (raf) cancelAnimationFrame(raf); raf = null; klangAus(); });
+    return box;
+  }
+
+  /* Karten */
+  var KARTEN = [
+    'Du bist nicht allein mit deinen Gefühlen.', 'Diese Zeit zerstört dich nicht. Sie verändert dich.', 'Du musst heute nichts schaffen.', 'Dein Tempo ist genau richtig.',
+    'Du bist nicht zu viel und nicht zu wenig.', 'Auch das hier wird ein Teil deiner Stärke.', 'Du darfst dir selbst glauben.', 'Es ist eine Phase, kein Zustand.',
+    'Du hast schon so viel getragen. Das hier trägt dich auch.', 'Du darfst dich an dich selbst anlehnen.', 'Du bist schon auf dem Weg, auch wenn du ihn noch nicht siehst.', 'Dein Wert hängt nicht davon ab, wer bleibt.',
+    'Was sich in dir regt, darf da sein.', 'Du darfst Halt in dir selbst finden.', 'Heute reicht es, wenn du bei dir bleibst.', 'Du bist mehr als das, was gerade schwer ist.', 'Du bist der Mensch, der immer bleibt.', 'Du darfst heute weich mit dir sein.'
+  ];
+  var KARTEN_FARBE = ['#3f5c4a', '#344d59', '#96625c', '#8a6a45', '#6f6753', '#013b51'];
+  var KARTEN_ZIER = [
+    '<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M16 38 A14 14 0 0 1 44 38"/><line x1="8" y1="38" x2="52" y2="38"/><path d="M46 28l6-3M42 20l5-5M34 16l2-7M26 16l-2-7M18 20l-5-5M14 28l-6-3"/></svg>',
+    '<svg viewBox="0 0 60 60" fill="currentColor"><path d="M30 8L34 26L52 30L34 34L30 52L26 34L8 30L26 26Z"/></svg>',
+    '<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M38 10A22 22 0 1 0 50 40A18 18 0 0 1 38 10Z"/></svg>',
+    '<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M30 54V18M30 34C20 34 14 28 12 18C22 18 28 24 30 34ZM30 26C38 26 44 20 46 10C36 10 32 16 30 26Z"/></svg>'
+  ];
+  function kartenBox() {
+    var box = el('div', { class: 'spalte' }), frei = mische(KARTEN);
+    var stapel = el('div', { class: 'kartenstapel' });
+    var zier = el('div'), satz = el('p'), fr = el('div', { class: 'seite-k front' }, [zier, satz]);
+    var r = el('div', { class: 'seite-k ruecken' }); r.innerHTML = KARTEN_ZIER[1];
+    var karte = el('button', { type: 'button', class: 'spielkarte', 'aria-label': 'Karte ziehen' }, [r, fr]);
+    function ziehen() {
+      if (karte.classList.contains('um')) { karte.classList.remove('um'); setTimeout(neu, ruhig ? 0 : 420); b.textContent = 'Noch eine Karte ziehen'; return; }
+      neu();
+    }
+    function neu() {
+      if (!frei.length) frei = mische(KARTEN);
+      satz.textContent = frei.pop();
+      fr.style.background = zufall(KARTEN_FARBE); r.style.background = '#3f5c4a';
+      zier.innerHTML = zufall(KARTEN_ZIER);
+      karte.classList.add('um');
+    }
+    karte.addEventListener('click', ziehen);
+    var b = knopf('Karte ziehen', ziehen);
+    stapel.appendChild(karte);
+    box.appendChild(stapel); box.appendChild(b);
+    return box;
+  }
+
+  /* Schneekugel: Der Satz wird klarer, je mehr sich der Schnee setzt */
+  var KUGEL = ['Auch wenn sich gerade alles durcheinander anfühlt: Es ist eine Phase, kein Zustand.', 'Lass es wirbeln. Du musst gerade nichts sortieren.', 'Alles darf sich in seinem Tempo setzen.', 'Du musst nicht wissen, wie es weitergeht. Du darfst darauf vertrauen, dass es weitergeht.'];
+  function kugelBox() {
+    var box = el('div', { class: 'spalte' });
+    var cv = el('canvas', { width: '540', height: '540' });
+    var satzEl = el('p', { class: 'kugel-satz', text: zufall(KUGEL) });
+    var haus = document.createElement('div');
+    haus.innerHTML = '<svg viewBox="0 0 120 70" aria-hidden="true"><ellipse cx="60" cy="66" rx="58" ry="8" fill="#fff"/><path d="M30 60 L44 22 L58 60Z" fill="#3f5c4a"/><path d="M52 60 L68 12 L84 60Z" fill="#527160"/><path d="M80 60 L90 34 L100 60Z" fill="#6d8a76"/></svg>';
+    var kugel = el('div', { class: 'kugel' }, [haus.firstChild, satzEl, cv]);
+    box.appendChild(el('div', { class: 'kugel-wrap' }, [kugel, el('div', { class: 'sockel' })]));
+    var ctx = cv.getContext('2d'), flocken = [], raf = null, geschuettelt = false;
+    for (var i = 0; i < 110; i++) flocken.push({ x: Math.random() * 540, y: 500 + Math.random() * 25, r: 2 + Math.random() * 5, vx: 0, vy: 0 });
+    function zeichne() {
+      ctx.clearRect(0, 0, 540, 540); ctx.fillStyle = '#c9a868';
+      var unten = 0;
+      flocken.forEach(function (f) {
+        f.vx *= .985; f.vy = f.vy * .99 + .022; f.x += f.vx; f.y += f.vy;
+        if (f.x < 14 || f.x > 526) f.vx *= -1;
+        if (f.y < 14) { f.y = 14; f.vy = Math.abs(f.vy); }
+        if (f.y > 515) { f.y = 515; f.vy = 0; f.vx = 0; unten++; }
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.3); ctx.fill();
+      });
+      var klar = geschuettelt ? unten / flocken.length : 0;
+      satzEl.style.filter = klar >= 1 ? 'none' : 'blur(' + (7 * (1 - klar)).toFixed(2) + 'px)';
+      satzEl.style.opacity = (.25 + .75 * klar).toFixed(2);
+      if (unten < flocken.length) raf = requestAnimationFrame(zeichne); else raf = null;
+    }
+    zeichne();
+    function schuettel() {
+      geschuettelt = true;
+      satzEl.textContent = zufall(KUGEL);
+      flocken.forEach(function (f) { f.x = Math.random() * 540; f.y = 40 + Math.random() * 340; f.vx = (Math.random() - .5) * 7; f.vy = -2 - Math.random() * 3; });
+      if (!raf) raf = requestAnimationFrame(zeichne);
+    }
+    var letzt = 0;
+    function bewegung(e) { var g = e.accelerationIncludingGravity; if (!g) return; var st = Math.abs(g.x || 0) + Math.abs(g.y || 0) + Math.abs(g.z || 0), j = Date.now(); if (st > 30 && j - letzt > 800) { letzt = j; schuettel(); } }
+    window.addEventListener('devicemotion', bewegung);
+    box.appendChild(knopf('Kugel schütteln', schuettel));
+    aufraeumen.push(function () { if (raf) cancelAnimationFrame(raf); raf = null; window.removeEventListener('devicemotion', bewegung); });
+    return box;
+  }
+
+  /* Ergebnis-Buch: sammelt, was sie in den Türchen erarbeitet (nur auf ihrem Handy) */
+  function buch(k, v) { var b = speicher.lies('buch', {}); b[k] = v; speicher.schreib('buch', b); }
+  function buchAbschnitte() {
+    var b = speicher.lies('buch', {}), w = speicher.lies('wuensche', {}), brief = speicher.lies('brief2027', ''), A = [];
+    if (b.leicht && b.leicht.length) A.push(['Was meine Tage leicht macht', b.leicht, 'leicht']);
+    if (b.plan) A.push(['Mein Plan für eine Woche', b.plan.map(function (p) { return p[1] ? p[0] + ': ' + p[1] : p[0]; }), 'plan']);
+    if (b.loslassen && b.loslassen.hier.length) A.push(['Das lasse ich hier', b.loslassen.hier, 'loslassen']);
+    if (b.loslassen && b.loslassen.mit.length) A.push(['Das nehme ich mit', b.loslassen.mit, 'loslassen']);
+    var ws = Object.keys(w).filter(function (k) { return w[k]; }).map(function (k) { return w[k]; });
+    if (ws.length) A.push(['Meine Wünsche', ws, 'wuensche']);
+    if (brief && brief.trim()) A.push(['Mein Brief an mich in einem Jahr', [brief.trim()], 'brief']);
+    if (b.anker) A.push(['Mein Anker', ['Mehr ' + b.anker[0], 'Weniger ' + b.anker[1], 'Das tut mir gut: ' + b.anker[2]], 'anker']);
+    if (b.khk) A.push(['Kopf, Herz, Körper', b.khk, 'khk']);
+    if (b.energie) A.push(['Das gibt mir Kraft', b.energie.gi.length ? b.energie.gi : ['Noch offen'], 'energie'], ['Das nimmt mir Kraft', b.energie.ne.length ? b.energie.ne : ['Nichts davon'], 'energie']);
+    if (b.lichter && b.lichter.length) A.push(['Meine Lichtblicke aus diesem Jahr', b.lichter, 'lichter']);
+    if (b.feiertage) A.push(['Mein Plan für die Feiertage', [b.feiertage[1], b.feiertage[2], b.feiertage[0]], 'feiertage']);
+    if (b.koffer && b.koffer.length) A.push(['Das kommt mit nach 2027', b.koffer, 'koffer']);
+    return A;
+  }
+  function buchBild(A) {
+    var c = document.createElement('canvas'), x = c.getContext('2d'), W = 720, zeilen = [];
+    x.font = "500 26px Montserrat, Arial, sans-serif";
+    A.forEach(function (a) { zeilen.push(['t', a[0]]); a[1].forEach(function (z) { umbruch(x, '· ' + z, 600).forEach(function (u) { zeilen.push(['z', u]); }); }); zeilen.push(['l', '']); });
+    var H = 300 + zeilen.reduce(function (h, z) { return h + (z[0] === 't' ? 62 : z[0] === 'z' ? 40 : 26); }, 0) + 120;
+    c.width = W; c.height = H;
+    var g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#f5f0e5'); g.addColorStop(1, '#e8e2d3'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.strokeStyle = '#b8975a'; x.lineWidth = 1.5; x.strokeRect(30, 30, W - 60, H - 60);
+    x.textAlign = 'center'; x.fillStyle = '#3f5c4a'; x.font = "italic 500 64px 'Cormorant Garamond', Georgia, serif"; x.fillText('Mein Dezember', W / 2, 160);
+    x.fillStyle = '#8d846f'; x.font = "600 22px 'Archivo Narrow', Arial, sans-serif"; x.fillText('H A L T   U N D   R I C H T U N G', W / 2, 210);
+    var y = 290; x.textAlign = 'left';
+    zeilen.forEach(function (z) {
+      if (z[0] === 't') { x.fillStyle = '#3f5c4a'; x.font = "italic 500 36px 'Cormorant Garamond', Georgia, serif"; x.fillText(z[1], 70, y); y += 62; }
+      else if (z[0] === 'z') { x.fillStyle = '#5b5444'; x.font = "500 26px Montserrat, Arial, sans-serif"; x.fillText(z[1], 80, y - 18); y += 40; }
+      else y += 26;
+    });
+    x.textAlign = 'center'; x.globalAlpha = .5; x.fillStyle = '#8d846f'; x.font = "400 18px Montserrat, Arial, sans-serif"; x.fillText('@mindspiration_', W / 2, H - 52); x.globalAlpha = 1;
+    var img = el('img', { class: 'bild', alt: 'Dein Dezember-Buch', style: 'width:min(70vw,260px)' }); img.src = c.toDataURL('image/png');
+    return img;
+  }
+  function dezemberBuch() {
+    var box = el('div', { class: 'spalte' }), A = buchAbschnitte();
+    if (!A.length) { box.appendChild(text('Hier sammelt sich alles, was du in den Türchen erarbeitest. Gerade ist dein Buch noch leer: Öffne ein paar Türchen und schau dann wieder vorbei.', 'hinweis')); return box; }
+    A.forEach(function (a) { box.appendChild(ergebnis(a[0], a[1].map(function (z) { return [z, '']; }))); });
+    box.appendChild(buchBild(A));
+    box.appendChild(text('Halte das Bild gedrückt, um dein Buch zu speichern.', 'hinweis'));
+    return box;
+  }
+
+  function audio(datei, titel, unter) {
+    var a = el('audio', { preload: 'metadata', src: datei }), balken = el('i'), dauer = el('span', { class: 'unter-t', text: unter || 'Eine Sprachnachricht von mir' });
+    var PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>', PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+    var b = el('button', { type: 'button', class: 'play', 'aria-label': 'Sprachnachricht abspielen' }); b.innerHTML = PLAY;
+    b.addEventListener('click', function () { if (a.paused) a.play(); else a.pause(); });
+    a.addEventListener('play', function () { b.innerHTML = PAUSE; b.setAttribute('aria-label', 'Pause'); });
+    a.addEventListener('pause', function () { b.innerHTML = PLAY; b.setAttribute('aria-label', 'Sprachnachricht abspielen'); });
+    a.addEventListener('timeupdate', function () { if (a.duration) balken.style.width = (a.currentTime / a.duration * 100) + '%'; });
+    a.addEventListener('loadedmetadata', function () { if (a.duration && isFinite(a.duration)) dauer.textContent = (unter || 'Eine Sprachnachricht von mir') + ' · ' + Math.floor(a.duration / 60) + ':' + ('0' + Math.round(a.duration % 60)).slice(-2) + ' Min.'; });
+    aufraeumen.push(function () { a.pause(); });
+    return el('div', { class: 'audio-karte' }, [b, el('div', { class: 'infos' }, [el('span', { class: 'titel', text: titel }), dauer, el('div', { class: 'leiste' }, [balken])]), a]);
+  }
+
+  /* Dein Dezember zum Durchblättern: pro Seite ein Bereich, höchstens 3 Punkte */
+  function dezemberBuchBlaettern() {
+    var A = buchAbschnitte(), seiten = [];
+    A.forEach(function (a) { seiten.push([a[0], a[1]]); });
+    var box = el('div', { class: 'spalte' });
+    if (!seiten.length) { box.appendChild(text('Hier sammelt sich, was du in den Türchen für dich erarbeitest. Gerade ist dein Dezember-Buch noch leer.', 'hinweis')); return box; }
+    seiten.push(['Und jetzt?', null]);
+    var nr = 0, karte = el('div'), nav = el('div', { class: 'buch-nav' }), punkte = el('div', { class: 'buch-punkte' });
+    var zur = el('button', { type: 'button', class: 'mini', text: 'Zurück' }), vor = el('button', { type: 'button', class: 'mini', text: 'Weiter' });
+    function zeig() {
+      karte.textContent = '';
+      var s = seiten[nr], b = el('div', { class: 'buch' }, [el('h3', { text: s[0] })]);
+      if (s[1]) b.appendChild(el('ul', {}, s[1].map(function (z) { return el('li', { text: z }); })));
+      else {
+        b.appendChild(el('p', { text: 'Schau noch einmal auf deinen Dezember zurück. Was nimmst du daraus mit ins neue Jahr?' }));
+        var f = el('textarea', { class: 'feld', 'aria-label': 'Was nimmst du mit?', placeholder: 'Nur für dich', style: 'min-height:90px', on: { input: function (e) { speicher.schreib('mitnahme', e.target.value); } } });
+        f.value = speicher.lies('mitnahme', '');
+        b.appendChild(f);
+      }
+      karte.appendChild(b);
+      punkte.textContent = ''; seiten.forEach(function (x, i) { punkte.appendChild(el('i', { class: i === nr ? 'an' : '' })); });
+      zur.disabled = nr === 0; vor.disabled = nr === seiten.length - 1;
+    }
+    zur.addEventListener('click', function () { if (nr > 0) { nr--; zeig(); } });
+    vor.addEventListener('click', function () { if (nr < seiten.length - 1) { nr++; zeig(); } });
+    nav.appendChild(zur); nav.appendChild(punkte); nav.appendChild(vor);
+    box.appendChild(karte); box.appendChild(nav); zeig();
+    box.appendChild(knopf('Mein Dezember-Buch als Bild speichern', function () { speichereBild(buchBild(A).src, 'mein-dezember-buch.png'); }, 'hell'));
+    return box;
+  }
+
+  /* Einladung zum Webinar, Wegweiser-Call oder zur Community */
+  function einladung(t, art, titel) {
+    var lab = { webinar: 'Zum Vision-Board-Webinar anmelden', call: 'Kostenlosen Wegweiser-Call buchen', community: 'Jetzt der Community beitreten' }[art];
+    if (!LINKS[art]) return document.createDocumentFragment();
+    return el('div', { class: 'einladung spalte' }, [titel ? el('h3', { text: titel }) : null, el('p', { text: t }), el('a', { class: 'knopf cta', href: mitUtm(LINKS[art]), target: '_blank', rel: 'noopener', text: lab })]);
+  }
+  /* Auswahl mit der Möglichkeit, etwas Eigenes zu ergänzen */
+  function wahlGruppe(r, frage, optionen, setze, platzhalter) {
+    r.appendChild(el('h3', { text: frage }));
+    var ch = el('div', { class: 'chips' });
+    function chip(o) { var b = el('button', { type: 'button', class: 'chip', text: o, on: { click: function () { [].forEach.call(ch.children, function (c) { c.classList.remove('an'); }); b.classList.add('an'); setze(o); } } }); ch.appendChild(b); return b; }
+    optionen.forEach(chip);
+    r.appendChild(ch);
+    if (platzhalter) {
+      var f = el('input', { class: 'feld', maxlength: '40', placeholder: platzhalter, 'aria-label': platzhalter, autocomplete: 'off' });
+      r.appendChild(f);
+      r.appendChild(knopf('Hinzufügen', function () { var t = f.value.trim(); if (!t) { f.focus(); return; } chip(t).click(); f.value = ''; }, 'hell'));
+    }
+  }
+
+  /* Drei Fragen bevor man jemandem schreibt */
+  function bevorBox() {
+    var box = el('div', { class: 'spalte' }), i = 0;
+    var F = ['Was ist gerade passiert, dass du schreiben möchtest?', 'Was erhoffst du dir von der Antwort?', 'Wie geht es dir morgen damit, wenn du es tust? Und wenn du es nicht tust?'];
+    (function zeig() {
+      box.textContent = '';
+      if (i >= 3) { box.appendChild(satzKarte('Du darfst jetzt entscheiden. Ganz ohne Eile.')); return; }
+      box.appendChild(el('h3', { text: 'Frage ' + (i + 1) + ' von 3' }));
+      box.appendChild(el('p', { text: F[i] }));
+      box.appendChild(el('textarea', { class: 'feld', 'aria-label': F[i], placeholder: 'Nur für dich', style: 'min-height:80px' }));
+      box.appendChild(knopf(i < 2 ? 'Weiter' : 'Fertig', function () { i++; zeig(); }));
+    })();
+    return box;
+  }
+
+  /* Home-Bildschirm-Hinweis für Türchen 1 */
+  function homeKarte() {
+    if ((window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone) return document.createDocumentFragment();
+    return el('div', { class: 'einladung spalte' }, [
+      el('h3', { text: 'Leg dir den Kalender heute auf deinen Home-Bildschirm' }),
+      el('p', { text: 'Mach das am besten jetzt, bevor du etwas einträgst. Dann bleibt alles, was du in den Türchen schreibst, sicher auf deinem Handy.' }),
+      el('p', { text: 'iPhone: In Safari unten auf das Teilen-Symbol tippen, dann auf „Zum Home-Bildschirm“.' }),
+      el('p', { text: 'Android: In Chrome oben rechts auf die drei Punkte tippen, dann auf „Zum Startbildschirm hinzufügen“.' })
+    ]);
+  }
+  /* Feld für Türchen 2, wenn der Tag sonnig ist */
+  function leichtFeld() {
+    var box = el('div', { class: 'spalte', style: 'margin-top:10px' }), ok = text('', 'hinweis');
+    var f = el('input', { class: 'feld', maxlength: '80', placeholder: 'Was hat den Tag leicht gemacht?', 'aria-label': 'Was hat den Tag leicht gemacht?', autocomplete: 'off' });
+    box.appendChild(f);
+    box.appendChild(knopf('Festhalten', function () {
+      var t = f.value.trim(); if (!t) { f.focus(); return; }
+      var l = speicher.lies('buch', {}).leicht || []; l.push(t); buch('leicht', l); f.value = '';
+      ok.textContent = 'Festgehalten. Du findest es an Heiligabend in deinem Dezember-Buch wieder.';
+    }, 'hell'));
+    box.appendChild(ok);
+    return box;
+  }
+
+  /* Die Türchen */
+  var FEST = { 6: 1, 12: 1, 21: 1, 24: 1 };
+  var TUEREN = {
+    1: { t: 'Einmal durchatmen', b: function (r) {
+      r.appendChild(audio('tuerchen-1.mp4', 'Willkommen in deinem Dezember'));
+      r.appendChild(homeKarte());
+      r.appendChild(el('h3', { text: 'Zum Start: Lass uns dein Nervensystem beruhigen' }));
+      r.appendChild(text('Wenn du länger ausatmest als einatmest, bekommt dein Körper das Signal: Ich bin sicher. Dein Herzschlag wird ruhiger und deine Gedanken werden leiser. Folge dem Punkt auf der Linie: 4 Sekunden einatmen, wenn sie hochgeht, 8 Sekunden ausatmen, wenn sie runtergeht. Du kannst jederzeit stoppen.'));
+      r.appendChild(atemBox(60));
+      r.appendChild(text(meinZeichen !== null ? 'Wenn du zum Kalender zurückgehst, leuchtet in deinem Sternbild jetzt dein erster Stern. Morgen wartet das Nächste auf dich.' : 'Morgen wartet das nächste Türchen auf dich.', 'hinweis'));
+      r.appendChild(einladung('Durch diesen Kalender gehst du allein. In der Community gehe ich mit dir: An jedem der drei kommenden Adventssonntage treffen wir uns live, trinken zusammen einen Kakao und du verbringst diese Sonntage nicht allein, sondern mit Frauen, die genau wissen, wie sich dieser Dezember anfühlt. Dazu bekommst du persönliche Impulse und Sprachnachrichten von mir.', 'community', 'Drei Adventssonntage, die du nicht allein verbringst'));
+    } },
+    2: { t: 'Dein inneres Wetter', b: function (r) {
+      r.appendChild(text('Wie sieht es heute in dir aus?'));
+      var erg = el('div');
+      var W = [['☀️', 'Sonnig', 'Schön, dass heute ein leichter Tag ist. Was hat ihn leicht gemacht? Halte es hier kurz fest, damit du an schwereren Tagen daran denkst.'], ['⛅', 'Wolkig', 'Grau ist auch ein Wetter. Was würde dir heute einen kleinen Lichtblick geben?'], ['🌧️', 'Regen', 'An Regentagen braucht niemand ein Programm. Was darfst du heute weglassen?'], ['⛈️', 'Sturm', 'Wenn es in dir stürmt, muss heute nichts entschieden werden. Was kann bis morgen warten?']];
+      var ch = el('div', { class: 'wetter' });
+      W.forEach(function (w) { var b = el('button', { type: 'button', on: { click: function () { [].forEach.call(ch.children, function (c) { c.classList.remove('an'); }); b.classList.add('an'); erg.textContent = ''; erg.appendChild(satzKarte(w[2])); if (w[1] === 'Sonnig') erg.appendChild(leichtFeld()); } } }, [el('span', { text: w[0] }), document.createTextNode(w[1])]); ch.appendChild(b); });
+      r.appendChild(ch); r.appendChild(erg);
+    } },
+    3: { t: 'Deine Karte für heute', b: function (r) {
+      r.appendChild(text('Zieh eine Karte. Sie ist heute für dich da.'));
+      r.appendChild(kartenBox());
+      r.appendChild(einladung('An manchen Tagen braucht es mehr als eine Karte. Wenn du merkst, dass du allein gerade nicht weiterkommst, lass uns in einem kostenlosen Wegweiser-Call gemeinsam schauen, was dir jetzt wirklich hilft.', 'call'));
+    } },
+    4: { t: 'Für die schweren Momente', b: function (r) {
+      r.appendChild(text('Manchmal braucht es nur einen Satz, der dich auffängt. Gestalte dir ein Bild für deinen Sperrbildschirm, damit er dich begleitet, wenn es gerade zu viel wird.'));
+      var S = ['Du bist nicht allein mit deinen Gefühlen.', 'Es ist eine Phase,\nkein Zustand.', 'Du hast schon so viel geschafft.\nAuch das hier geht vorüber.', 'Du darfst heute weich mit dir sein.', 'Es wird alles wieder gut,\nauch wenn du es heute noch nicht sehen kannst.'];
+      var aus = el('div', { class: 'spalte' }), mot = 'nacht', satz = S[0];
+      function male() { aus.textContent = ''; aus.appendChild(bild({ motiv: mot, teile: [{ s: satz, g: 38 }] })); }
+      function an(reihe, b) { [].forEach.call(reihe.children, function (c) { c.classList.remove('an'); }); if (b) b.classList.add('an'); }
+      var ch = el('div', { class: 'chips' }), wahl = el('div', { class: 'satz-wahl' });
+      [['Sternennacht', 'nacht'], ['Winterwald', 'tanne'], ['Sonnenaufgang', 'sonne']].forEach(function (m, i) { var b = el('button', { type: 'button', class: 'chip' + (i ? '' : ' an'), text: m[0], on: { click: function () { an(ch, b); mot = m[1]; male(); } } }); ch.appendChild(b); });
+      S.forEach(function (t, i) { var b = el('button', { type: 'button', class: 'satz-option' + (i ? '' : ' an'), text: t, on: { click: function () { an(wahl, b); eigen.value = ''; satz = t; male(); } } }); wahl.appendChild(b); });
+      var eigen = el('textarea', { class: 'feld', id: 'eigenSatz', maxlength: '120', style: 'min-height:56px', placeholder: 'Oder schreib deinen eigenen Satz', 'aria-label': 'Dein eigener Satz', autocomplete: 'off', on: { input: function (e) { if (e.target.value.trim()) { an(wahl, null); satz = e.target.value.trim(); male(); } } } });
+      r.appendChild(el('h3', { text: 'Wähle dein Motiv' })); r.appendChild(ch);
+      r.appendChild(el('h3', { text: 'Wähle deinen Satz' })); r.appendChild(wahl); r.appendChild(eigen);
+      r.appendChild(aus); male();
+    } },
+    5: { t: 'Dein Glückskeks', b: function (r) {
+      var S = ['Etwas in dir weiß schon, was du brauchst.', 'Heute darfst du dir selbst glauben.', 'Du bist weiter, als du denkst.', 'Das Schönste kommt oft leise.', 'Du darfst dir mehr zutrauen.', 'Heute ist ein guter Tag, um dich selbst zu wählen.', 'Dein Mut ist größer als deine Angst.', 'Was zu dir gehört, findet dich.', 'Du musst nicht alles wissen, um loszugehen.', 'Jemand ist froh, dass es dich gibt.', 'Du bist genau richtig, so wie du bist.', 'Etwas Neues wächst schon in dir.'];
+      var erg = el('div', { class: 'spalte' });
+      var k = el('button', { type: 'button', class: 'keks', 'aria-label': 'Glückskeks öffnen', on: { click: function () { k.classList.add('auf'); erg.textContent = ''; erg.appendChild(el('div', { class: 'zettel-keks', text: zufall(S) })); w.textContent = 'Noch einen Keks öffnen'; w.hidden = false; } } });
+      k.innerHTML = '<span class="keks-h l">🥠</span><span class="keks-h r">🥠</span>';
+      var w = knopf('', function () { k.classList.remove('auf'); erg.textContent = ''; w.hidden = true; }, 'hell'); w.hidden = true;
+      r.appendChild(text('Tippe auf den Keks und schau, welche Botschaft heute für dich drin ist.'));
+      r.appendChild(k); r.appendChild(erg); r.appendChild(w);
+    } },
+    6: { t: 'Etwas für deinen Stiefel', b: function (r) {
+      r.appendChild(text('Heute ist Nikolaus. In deinen Stiefel kommt heute etwas von dir für dich: ein kleiner Gutschein. Tippe auf den Stiefel und lös ihn in den nächsten Tagen ein.'));
+      var G = ['Ein Abend nur für dich, ohne schlechtes Gewissen.', 'Etwas Süßes, einfach weil du es dir wert bist.', 'Ein Spaziergang an der frischen Luft, ganz in deinem Tempo.', 'Ein Nein, das du nicht erklären musst.', 'Eine Stunde ganz ohne Handy.', 'Ein warmes Bad oder eine lange Dusche.', 'Dein Lieblingsessen, nur für dich gekocht oder bestellt.', 'Ein Mittagsschlaf ohne Wecker.', 'Ein Anruf bei einem Menschen, der dir guttut.', 'Ein Buch oder ein Film, der dich zum Lächeln bringt.'];
+      var erg = el('div', { class: 'spalte' }), frei = mische(G);
+      var st = el('button', { type: 'button', class: 'stiefel', 'aria-label': 'Gutschein aus dem Stiefel holen', on: { click: function () {
+        if (!frei.length) frei = mische(G);
+        var g = frei.pop(); erg.textContent = '';
+        erg.appendChild(gutscheinBild(g));
+        st.setAttribute('aria-label', 'Noch einen Gutschein holen'); hinweisSt.textContent = 'Tippe noch einmal auf den Stiefel, wenn du einen anderen Gutschein möchtest.';
+      } } });
+      st.innerHTML = STIEFEL;
+      var hinweisSt = text('', 'hinweis');
+      r.appendChild(st); r.appendChild(hinweisSt); r.appendChild(erg);
+    } },
+    106: { t: 'Dein Satz für dein Sternzeichen', b: function (r) {
+      r.appendChild(text('Speicher ihn dir als Hintergrundbild, damit du ihn an schweren Tagen siehst.'));
+      var erg = el('div', { class: 'spalte' }), wahl = el('div', { class: 'spalte' });
+      function zeig(i) { var z = ZEICHEN[i]; wahl.textContent = ''; erg.textContent = ''; erg.appendChild(bild({ motiv: 'nacht', zeichen: z.g + '\uFE0E', titel: z.n, teile: [{ s: z.s, g: 40 }] })); }
+      meinZeichen = speicher.lies('zeichen', meinZeichen); if (meinZeichen !== null) zeig(meinZeichen);
+      else { wahl.appendChild(text('Trag dafür deinen Geburtstag ein. Er bleibt nur auf deinem Handy.', 'hinweis')); var feld = el('div', { class: 'spalte' }); wahl.appendChild(feld); zeichenWahl(feld, function (i) { setzeZeichen(i); zeig(i); }); }
+      r.appendChild(wahl); r.appendChild(erg);
+      var alle = el('div', { class: 'chips' });
+      ZEICHEN.forEach(function (z, i) { alle.appendChild(el('button', { type: 'button', class: 'chip klein', text: z.n, on: { click: function () { zeig(i); } } })); });
+      if (vorschau) { r.appendChild(el('p', { class: 'entwurf', text: 'Nur in der Vorschau: Hier kannst du dir alle Sternzeichen ansehen.' })); r.appendChild(alle); }
+    } },
+    7: { t: 'Was dir gerade guttut', b: function (r) {
+      r.appendChild(text('Kleine Dinge können viel verändern, wenn du sie dir bewusst vornimmst. Wähle 3 Dinge, die dir diese Woche guttun könnten. Danach planst du, wann und wie du sie umsetzt.'));
+      var A = { 'Früher schlafen': 'Wann möchtest du künftig schlafen gehen?', 'Spazieren gehen': 'Wie viele Minuten nimmst du dir vor?', 'Eine Freundin anrufen': 'Wen möchtest du anrufen?', 'Warm baden': 'An welchem Tag möchtest du dir die Zeit nehmen?', 'Handy weglegen': 'Ab wann möchtest du es abends weglegen?', 'Etwas Gutes kochen': 'Was möchtest du dir kochen?', 'Einen Tee in Ruhe': 'Zu welcher Tageszeit tut dir das am besten?', 'Einmal Nein sagen': 'Wozu möchtest du Nein sagen?', 'Tagebuch schreiben': 'Nimmst du es dir für morgens oder abends vor?', 'Etwas nur für mich': 'Was genau möchtest du nur für dich tun?' }, wahl = [];
+      var ch = el('div', { class: 'chips raster2' }), fragen = el('div', { class: 'spalte' }), erg = el('div', { class: 'spalte' });
+      function bau() {
+        fragen.textContent = ''; erg.textContent = '';
+        if (wahl.length < 3) return;
+        var felder = wahl.map(function (x, i) { return el('input', { class: 'feld', id: 'plan7' + i, maxlength: '60', autocomplete: 'off' }); }), schritt = 0;
+        function frage() {
+          fragen.textContent = '';
+          var x = wahl[schritt];
+          fragen.appendChild(el('p', { class: 'hinweis', text: 'Frage ' + (schritt + 1) + ' von 3' }));
+          fragen.appendChild(el('label', { for: 'plan7' + schritt, text: x + ': ' + A[x] })); fragen.appendChild(felder[schritt]);
+          if (schritt < 2) fragen.appendChild(knopf('Weiter', function () { schritt++; frage(); }));
+          else fragen.appendChild(planKnopf);
+        }
+        var planKnopf = knopf('Mein Plan für diese Woche', function () {
+          buch('plan', wahl.map(function (x, i) { return [x, felder[i].value]; }));
+          erg.textContent = '';
+          var pl = wahl.map(function (x, i) { return [x, felder[i].value]; });
+          erg.appendChild(ergebnis('Dein Plan für diese Woche', pl));
+          erg.appendChild(speicherKnopf(listenBild('Mein Plan für diese Woche', pl.map(function (p) { return p[1] ? p[0] + ': ' + p[1] : p[0]; })), 'mein-plan.png', 'Plan als Bild speichern'));
+          erg.appendChild(text('Dein Plan bleibt hier gespeichert. An Heiligabend findest du ihn in deinem Dezember-Buch wieder, zusammen mit allem, was du in den Türchen für dich sammelst. Und wenn du ihn nur zur Hälfte schaffst, ist das auch okay.', 'hinweis'));
+          fragen.textContent = '';
+        });
+        frage();
+      }
+      function chip(a) { var b = el('button', { type: 'button', class: 'chip', text: a, on: { click: function () {
+        var i = wahl.indexOf(a);
+        if (i > -1) { wahl.splice(i, 1); b.classList.remove('an'); bau(); }
+        else if (wahl.length < 3) { wahl.push(a); b.classList.add('an'); if (wahl.length === 3) bau(); }
+      } } }); ch.appendChild(b); return b; }
+      Object.keys(A).forEach(chip);
+      var eig = el('input', { class: 'feld', id: 'eigen7', maxlength: '40', placeholder: 'Oder etwas Eigenes', 'aria-label': 'Etwas Eigenes', autocomplete: 'off' });
+      var voll = text('', 'hinweis');
+      var eigKnopf = knopf('Hinzufügen', function () { var t = eig.value.trim(); if (!t) { eig.focus(); return; } voll.textContent = ''; if (!A[t]) { A[t] = 'Wann möchtest du dir das vornehmen und wie sieht das für dich aus?'; var b = chip(t); eig.value = ''; if (wahl.length < 3) b.click(); else voll.textContent = 'Du hast schon 3 Dinge gewählt. Tippe eins davon an, um es zu entfernen, und dann dein Eigenes, damit es in deinen Plan kommt.'; } }, 'hell');
+      r.appendChild(ch); r.appendChild(eig); r.appendChild(eigKnopf); r.appendChild(voll); r.appendChild(fragen); r.appendChild(erg);
+      r.appendChild(einladung('Sich etwas vorzunehmen ist leicht, dranzubleiben ist schwer, gerade wenn du allein bist. In meiner 1:1-Begleitung gehen wir deine Schritte gemeinsam, Woche für Woche. Im kostenlosen Wegweiser-Call schauen wir, was du gerade brauchst.', 'call'));
+    } },
+    8: { t: 'Dein verborgener Satz', b: function (r) {
+      r.appendChild(text('Unter dem Gold liegt ein Satz für dich. Wisch ihn mit deinem Finger frei.'));
+      var S = ['Was du fühlst, darf da sein.', 'Du darfst dir selbst vertrauen.', 'Du bist stärker, als du heute glaubst.', 'Dein Weg muss für niemanden Sinn ergeben.', 'Du gehst deinen Weg in deinem Tempo.', 'Du bist genug.', 'Du darfst wieder träumen.', 'Hinter dem Schweren wartet auch Schönes.'];
+      var platzR = el('div');
+      function neu() {
+        var nr = (speicher.lies('satz8', -1) + 1) % S.length; speicher.schreib('satz8', nr);
+        var cv = el('canvas'), box = el('div', { class: 'rubbel' }, [el('p', { class: 'satz', text: S[nr] }), cv]);
+        platzR.textContent = ''; platzR.appendChild(box);
+        requestAnimationFrame(function () {
+          var q = box.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
+          cv.width = q.width * d; cv.height = q.height * d;
+          var x = cv.getContext('2d'); x.scale(d, d); x.fillStyle = '#d3b26f'; x.fillRect(0, 0, q.width, q.height);
+          x.fillStyle = '#fff'; x.font = '600 14px Montserrat, Arial, sans-serif'; x.textAlign = 'center'; x.fillText('Hier freiwischen', q.width / 2, q.height / 2 + 5);
+          x.globalCompositeOperation = 'destination-out'; x.lineCap = 'round'; x.lineWidth = 34;
+          var an = false, lx, ly;
+          function pos(e) { var q2 = cv.getBoundingClientRect(); return [e.clientX - q2.left, e.clientY - q2.top]; }
+          cv.addEventListener('pointerdown', function (e) { an = true; var p = pos(e); lx = p[0]; ly = p[1]; x.beginPath(); x.arc(lx, ly, 17, 0, 6.3); x.fill(); try { cv.setPointerCapture(e.pointerId); } catch (err) {} });
+          cv.addEventListener('pointermove', function (e) { if (!an) return; var p = pos(e); x.beginPath(); x.moveTo(lx, ly); x.lineTo(p[0], p[1]); x.stroke(); lx = p[0]; ly = p[1]; });
+          cv.addEventListener('pointerup', function () { an = false; });
+        });
+      }
+      r.appendChild(platzR); neu();
+      r.appendChild(knopf('Noch einen Satz', neu, 'hell'));
+    } },
+    9: { t: 'Was nimmst du mit und was lässt du hier?', b: function (r) {
+      r.appendChild(text('Hier gibt es kein Richtig oder Falsch. Wisch nach rechts, was du mitnehmen möchtest, und nach links, was du diesen Dezember hierlassen möchtest. Du kannst auch die Knöpfe nutzen.'));
+      var I = { 'Stark sein': 'Du darfst dich auch mal halten lassen.', 'Für alle da sein': 'Heute darfst du zuerst bei dir nachfragen.', 'Harmonie': 'Es darf auch mal knirschen, ohne dass du es reparieren musst.', 'Die perfekten Feiertage': 'Die Feiertage dürfen auch einfach nur okay sein.', 'Funktionieren': 'Du darfst langsamer werden. Es geht trotzdem weiter.', 'Alles selbst machen': 'Bitte heute eine Person um eine Kleinigkeit.', 'Erinnerungen': 'Du musst sie nicht wegwerfen. Du darfst sie leiser stellen.', 'Rücksicht': 'Rücksicht darf auch dir selbst gelten.' };
+      var IM = { 'Stark sein': 'Deine Stärke darf auch leise sein.', 'Für alle da sein': 'Wie schön, wenn du dich selbst mitzählst.', 'Harmonie': 'Sie darf auch in dir beginnen.', 'Die perfekten Feiertage': 'Schön darf es werden, perfekt muss es nicht sein.', 'Funktionieren': 'Es hat dich getragen. Du darfst trotzdem Pausen machen.', 'Alles selbst machen': 'Du kannst so viel. Du darfst dir trotzdem helfen lassen.', 'Erinnerungen': 'Sie gehören zu dir und dürfen bleiben.', 'Rücksicht': 'Schön, dass dir andere wichtig sind. Du zählst genauso.' };
+      var S = mische(Object.keys(I)), i = 0, mit = [], hier = [];
+      var buehne = el('div', { class: 'spalte' });
+      function weiter(rechts) { (rechts ? mit : hier).push(S[i]); i++; zeige(); }
+      function zeige() {
+        buehne.textContent = '';
+        if (i >= S.length) {
+          buch('loslassen', { hier: hier.slice(), mit: mit.slice() });
+          if (hier.length) buehne.appendChild(ergebnis('Was lässt du hier?', hier.map(function (x) { return [x, I[x]]; })));
+          if (mit.length) buehne.appendChild(ergebnis('Was nimmst du mit?', mit.map(function (x) { return [x, IM[x] || 'Schön, dass du das mitnimmst.']; })));
+          buehne.appendChild(text(hier.length ? 'Du musst nicht alles auf einmal hierlassen. Such dir einen der Sätze aus, der dich heute begleitet.' : 'Du nimmst alles mit. Auch das ist in Ordnung. Schau einfach, was davon heute leichter sein darf.', 'hinweis'));
+          var zl = []; if (hier.length) zl.push('Das lasse ich hier: ' + hier.join(', ')); if (mit.length) zl.push('Das nehme ich mit: ' + mit.join(', '));
+          buehne.appendChild(speicherKnopf(listenBild('Was ich mitnehme und hierlasse', zl), 'mitnehmen-hierlassen.png', 'Als Bild speichern'));
+          eig9.hidden = true; eigK9.hidden = true; eigText9.hidden = true;
+          return;
+        }
+        var hl = el('span', { class: 'wisch-hinweis links', text: '← Lasse ich hier' }), hr = el('span', { class: 'wisch-hinweis rechts', text: 'Nehme ich mit →' });
+        var k = el('div', { class: 'karte wisch' }, [hl, hr, el('p', { class: 'satz', text: S[i] })]), st = null;
+        k.addEventListener('pointerdown', function (e) { st = e.clientX; try { k.setPointerCapture(e.pointerId); } catch (err) {} });
+        k.addEventListener('pointermove', function (e) { if (st === null) return; var d = e.clientX - st; k.style.transition = 'none'; k.style.transform = 'translateX(' + d + 'px) rotate(' + d / 20 + 'deg)'; hr.style.opacity = d > 20 ? Math.min(1, d / 70) : 0; hl.style.opacity = d < -20 ? Math.min(1, -d / 70) : 0; k.style.background = d > 40 ? '#eef4f0' : d < -40 ? '#f7ecea' : ''; });
+        k.addEventListener('pointerup', function (e) { if (st === null) return; var d = e.clientX - st; st = null; k.style.transition = ''; hl.style.opacity = 0; hr.style.opacity = 0; k.style.background = ''; if (Math.abs(d) > 70) weiter(d > 0); else k.style.transform = ''; });
+        buehne.appendChild(k);
+        buehne.appendChild(el('div', { class: 'zwei' }, [knopf('Lasse ich hier', function () { weiter(false); }, 'hell'), knopf('Nehme ich mit', function () { weiter(true); }, 'hell')]));
+        buehne.appendChild(text((i + 1) + ' von ' + S.length, 'hinweis'));
+      }
+      var EIG = ['Schön, dass du das für dich benannt hast.', 'Allein, dass du es aufschreibst, macht es schon ein bisschen leichter.', 'Das darf hierbleiben. Du trägst es nicht mehr allein.', 'Du darfst entscheiden, wie viel Platz es noch bekommt.', 'Gut, dass du ehrlich zu dir bist.'], eigene = 0;
+      var eigText9 = text('Fehlt dir etwas? Füg bis zu 5 eigene Dinge hinzu.', 'hinweis');
+      var eig9 = el('input', { class: 'feld', id: 'eigen9', maxlength: '40', placeholder: 'Etwas Eigenes hinzufügen', 'aria-label': 'Etwas Eigenes', autocomplete: 'off' });
+      var eigK9 = knopf('Hinzufügen', function () { var t = eig9.value.trim(); if (!t) { eig9.focus(); return; } if (eigene >= 5) { eigText9.textContent = 'Du hast schon 5 eigene Dinge hinzugefügt.'; return; } I[t] = EIG[eigene % EIG.length]; IM[t] = 'Schön, dass du das mitnimmst.'; eigene++; S.splice(i + 1, 0, t); eig9.value = ''; zeige(); }, 'hell');
+      r.appendChild(eigText9); r.appendChild(eig9); r.appendChild(eigK9); zeige(); r.appendChild(buehne);
+      r.appendChild(einladung('Loslassen ist leichter, wenn du es nicht allein tun musst. In der Community gehe ich diesen Weg mit dir, mit Impulsen von mir und Frauen, die genau wissen, wie sich das anfühlt.', 'community'));
+    } },
+    10: { t: 'Deine Schneekugel', b: function (r) {
+      r.appendChild(text('Tippe unten auf „Kugel schütteln“ und warte, bis sich der Schnee setzt. Mit jeder Flocke wird dein Satz ein bisschen klarer.'));
+      r.appendChild(kugelBox());
+    } },
+    11: { t: 'Was kreist gerade in deinem Kopf?', b: function (r) {
+      r.appendChild(text('Schreib deinen Gedanken hier auf. Ein paar Worte oder Sätze reichen. Mit einem Tipp auf den Button löst er sich auf. Danach ist er wirklich weg und wird nirgends gespeichert.'));
+      r.appendChild(aufloeser('Dein Gedanke', 'Ein paar Worte reichen …', ['Für diesen Moment darf es gehen.', 'Du musst nicht alles festhalten.', 'Atme einmal durch. Es ist raus.', 'Du hast Platz geschaffen. Für dich.']));
+      r.appendChild(einladung('Wenn sich deine Gedanken immer wieder um dieselben Fragen drehen, musst du sie nicht allein sortieren. Im kostenlosen Wegweiser-Call schauen wir gemeinsam, was dich gerade festhält.', 'call'));
+    } },
+    12: { t: 'Deine 12 Wünsche', b: function (r) {
+      r.appendChild(audio('tuerchen-12.mp4', 'Meine Nachricht zum 12.12.', 'Hör kurz rein, bevor du startest'));
+      r.appendChild(text('Was wünschst du dir für deine nächsten 12 Monate? Egal wie klein oder groß. Die Vorschläge in den Feldern sind nur Impulse, schreib einfach auf, was dir in den Sinn kommt.'));
+      r.appendChild(text('Du musst nicht alles heute finden. Deine Wünsche bleiben gespeichert, solange du den Kalender auf diesem Handy auf demselben Weg öffnest.', 'kursiv-links'));
+      var P = ['Ein Gefühl, das ich öfter haben möchte', 'Ein Ort, den ich sehen möchte', 'Etwas, das ich mich endlich traue', 'Ein Mensch, den ich öfter sehen möchte', 'Etwas, das ich lernen möchte', 'Etwas nur für mich', 'Was sich in meinem Zuhause ändern darf', 'Was sich beruflich ändern darf', 'Was ich loslassen möchte', 'Ein kleiner Alltagsmoment', 'Ein großer Traum', 'Mein Wunsch, ganz frei'];
+      var w = speicher.lies('wuensche', {}), zaehler = text('', 'hinweis'), liste = el('div', { class: 'spalte' }), rolle = el('div');
+      function zaehle() { zaehler.textContent = Object.keys(w).filter(function (k) { return w[k]; }).length + ' von 12 Wünschen'; }
+      P.forEach(function (p, i) {
+        var f = el('input', { class: 'feld', id: 'wunsch' + i, 'aria-label': 'Wunsch ' + (i + 1), placeholder: p, maxlength: '80', value: w[i] || '', on: { input: function (e) { w[i] = e.target.value; speicher.schreib('wuensche', w); zaehle(); } } });
+        liste.appendChild(el('div', { class: 'wunsch-zeile' }, [el('span', { text: String(i + 1) }), f]));
+      });
+      liste.appendChild(zaehler);
+      liste.appendChild(knopf('Meine Wünsche einpacken', function () {
+        if (!Object.keys(w).some(function (k) { return w[k]; })) { liste.querySelector('input').focus(); return; }
+        liste.classList.add('einrollen');
+        setTimeout(function () { liste.hidden = true; liste.classList.remove('einrollen'); zeigeRolle(); speicher.schreib('eingepackt', true); }, ruhig ? 0 : 600);
+      }));
+      function zeigeRolle() {
+        rolle.textContent = '';
+        var box = el('div', { class: 'wunsch-rolle' });
+        box.innerHTML = '<svg viewBox="0 0 230 110" aria-hidden="true"><ellipse cx="30" cy="55" rx="12" ry="26" fill="#efe3c6" stroke="#d9c9a6"/><rect x="30" y="29" width="170" height="52" fill="#fbf3dc" stroke="#d9c9a6"/><ellipse cx="200" cy="55" rx="12" ry="26" fill="#f6ecd2" stroke="#d9c9a6"/><ellipse cx="200" cy="55" rx="5" ry="12" fill="#e6d6b0"/><rect x="108" y="29" width="14" height="52" fill="#9c3f3a"/><path d="M115 40 C98 22 84 30 92 40 C96 46 108 44 115 40 Z M115 40 C132 22 146 30 138 40 C134 46 122 44 115 40 Z" fill="#9c3f3a"/><path d="M113 42 L104 64 L110 61 L112 66 Z M117 42 L126 64 L120 61 L118 66 Z" fill="#9c3f3a"/></svg>';
+        box.appendChild(el('p', { class: 'satz', text: 'Deine Wünsche sind sicher verwahrt.' }));
+        box.appendChild(text('Am 28.12. holen wir sie im Vision-Board-Webinar wieder hervor.', 'hinweis'));
+        box.appendChild(el('button', { type: 'button', class: 'textknopf', text: 'Noch einmal öffnen', on: { click: function () { rolle.textContent = ''; liste.hidden = false; speicher.schreib('eingepackt', false); } } }));
+        rolle.appendChild(box);
+      }
+      r.appendChild(liste); r.appendChild(rolle);
+      zaehle();
+      if (speicher.lies('eingepackt', false)) { liste.hidden = true; zeigeRolle(); }
+      r.appendChild(einladung('Möchtest du, dass deine Wünsche nicht nur Wünsche bleiben? Im Vision-Board-Webinar am 28.12. geben wir ihnen gemeinsam ein Bild und eine Richtung. Kostenlos und live mit mir.', 'webinar'));
+    } },
+    13: { t: 'Eine kleine Pause', b: function (r) { TUEREN[113].b(r); r.appendChild(el('h3', { text: 'Und ein Satz für dein Sternzeichen' })); TUEREN[106].b(r); } },
+    113: { t: '', b: function (r) {
+      r.appendChild(text('Eine kleine Pause für dich: Dreh die Karten um und such die passenden Paare. Hinter jedem Paar wartet ein kleiner Satz, der dich auffängt.'));
+      var Z = [['✦', 'Du darfst leuchten.'], ['♡', 'Du bist genug.'], ['☾', 'Du darfst dich ausruhen.'], ['❄', 'Auch das geht vorbei.'], ['☼', 'Es wird wieder heller.'], ['✿', 'Du wächst gerade.']];
+      var deck = mische(Z.concat(Z)), offen = [], sperre = false, gefunden = 0, gr = el('div', { class: 'memory' });
+      var satz = el('p', { class: 'satz', text: 'Dein Satz erscheint hier.' }), satzBox = el('div', { class: 'mem-satz' }, [satz]);
+      deck.forEach(function (z) {
+        var c = el('button', { type: 'button', class: 'mem', text: z[0] + '︎', 'aria-label': 'Karte', on: { click: function () {
+          if (sperre || c.classList.contains('zu-sehen') || c.classList.contains('fertig')) return;
+          c.classList.add('zu-sehen'); offen.push({ c: c, z: z });
+          if (offen.length === 2) {
+            var a = offen[0], b = offen[1]; offen = [];
+            if (a.z[0] === b.z[0]) { a.c.classList.add('fertig'); b.c.classList.add('fertig'); gefunden++; satz.textContent = gefunden === Z.length ? 'Alle gefunden. Schön, dass du dir diese Pause genommen hast.' : a.z[1]; }
+            else { sperre = true; setTimeout(function () { a.c.classList.remove('zu-sehen'); b.c.classList.remove('zu-sehen'); sperre = false; }, 800); }
+          }
+        } } });
+        gr.appendChild(c);
+      });
+      r.appendChild(satzBox); r.appendChild(gr);
+    } },
+    14: { t: 'Ein kurzer Brief an dich in einem Jahr', b: function (r) {
+      r.appendChild(text('Stell dir vor, es ist genau ein Jahr später, der 14.12.2027, und du liest diese Zeilen. Was möchtest du dir sagen? Wie soll es dir dann gehen?'));
+      r.appendChild(text('Vielleicht helfen dir diese Fragen: Wie geht es dir am 14.12.2027? Was für eine Person bist du in diesem Jahr geworden? Und was möchtest du dir unbedingt sagen?', 'hinweis'));
+      var f = el('textarea', { class: 'feld', id: 'brief2027', maxlength: '600', 'aria-label': 'Dein Brief an dich', placeholder: 'Liebe …', style: 'min-height:180px', on: { input: function (e) { speicher.schreib('brief2027', e.target.value); } } });
+      f.value = speicher.lies('brief2027', '');
+      var erg = el('div', { class: 'spalte' });
+      r.appendChild(f);
+      r.appendChild(knopf('Brief fertigstellen', function () {
+        var t = f.value.trim(); if (!t) { f.focus(); return; }
+        erg.textContent = '';
+        erg.appendChild(el('div', { class: 'papier' }, [el('div', { class: 'kopf', text: 'An mich · 14.12.2027' }), document.createTextNode(t)]));
+        erg.appendChild(speicherKnopf(papierBild('An mich · 14.12.2027', t), 'brief-an-mich.png'));
+        erg.appendChild(text('Dein Brief bleibt hier gespeichert, solange du den Kalender auf demselben Weg öffnest. Speicher ihn dir zusätzlich, damit du ihn in einem Jahr wiederfindest.', 'hinweis'));
+        erg.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'start' });
+      }));
+      r.appendChild(erg);
+      r.appendChild(einladung('Du hast gerade aufgeschrieben, wie es dir in einem Jahr gehen soll. Damit das nicht nur ein Gedanke bleibt: Am 28.12. gestalten wir zusammen dein Vision Board, kostenlos und live mit mir.', 'webinar'));
+    } },
+    15: { t: 'Dein Anker für die nächsten Wochen', b: function (r) {
+      r.appendChild(text('Manchmal verlierst du im Alltag aus den Augen, was dir guttut. Beantworte drei kurze Fragen. Daraus entsteht dein Anker: eine Frage, die du dir stellen kannst, wenn du in den nächsten Wochen vor einer Entscheidung stehst. Zum Beispiel, ob du zu einer Feier zusagst, jemandem schreibst oder dir etwas vornimmst.'));
+      var w = {}, erg = el('div', { class: 'spalte' });
+      function fertig() {
+        if (!(w.tut && w.weniger && w.mehr)) return;
+        buch('anker', [w.mehr, w.weniger, w.tut]);
+        erg.textContent = '';
+        erg.appendChild(el('h3', { text: 'Dein Anker für die nächsten Wochen' }));
+        erg.appendChild(text('Wenn du vor einer Entscheidung stehst, frag dich:'));
+        erg.appendChild(satzKarte('Bringt mich das näher an mehr ' + w.mehr + ' oder zurück zu mehr ' + w.weniger + '?'));
+        erg.appendChild(text('Und wenn du nicht weißt, was du gerade brauchst: ' + w.tut + ' hat dir zuletzt gutgetan. Gönn dir mehr davon.'));
+      }
+      wahlGruppe(r, 'Was hat dir in letzter Zeit gutgetan?', ['Zeit allein', 'Zeit mit Menschen', 'Bewegung', 'Natur', 'Schlaf', 'Etwas Kreatives'], function (o) { w.tut = o; fertig(); });
+      wahlGruppe(r, 'Wovon möchtest du weniger?', ['Druck', 'Grübeln', 'Vergleichen', 'Funktionieren', 'Erwartungen', 'Angst'], function (o) { w.weniger = o; fertig(); });
+      wahlGruppe(r, 'Wovon möchtest du mehr?', ['Ruhe', 'Mut', 'Freude', 'Klarheit', 'Nähe', 'Freiheit'], function (o) { w.mehr = o; fertig(); });
+      r.appendChild(erg);
+      r.appendChild(einladung('Wenn du merkst, dass dich ein Thema immer wieder festhält, lass es uns gemeinsam verändern: in einem kostenlosen Wegweiser-Call mit mir.', 'call'));
+    } },
+    16: { t: 'Kopf, Herz, Körper', b: function (r) {
+      r.appendChild(text('Was brauchst du heute? Wähle für jeden Bereich eine Antwort aus. Du bekommst dafür drei kleine Ideen für deinen Tag.'));
+      var B = [['Kopf', { 'Ruhe': 'Leg dein Handy heute für 20 Minuten in ein anderes Zimmer.', 'Klarheit': 'Schreib drei Dinge auf, die gerade in deinem Kopf kreisen. Mehr musst du nicht tun.', 'Pause vom Grübeln': 'Wenn die Gedanken kreisen, steh auf und mach etwas mit deinen Händen: Wäsche falten, kochen oder aufräumen. Das holt dich aus dem Kopf.', 'Ablenkung': 'Schau dir heute etwas an, bei dem du weißt, dass es dich zum Lächeln bringt.' }], ['Herz', { 'Nähe': 'Schick einem Menschen, den du magst, heute eine Nachricht und schau, was zurückkommt.', 'Verständnis': 'Sag dir heute den Satz, den du einer Freundin sagen würdest.', 'Geborgenheit': 'Kuschel dich heute in eine Decke und gönn dir einen ruhigen Moment nur für dich.', 'Freude': 'Was hat dich als Kind gefreut? Mach heute eine kleine Version davon.' }], ['Körper', { 'Schlaf': 'Geh heute 30 Minuten früher ins Bett.', 'Bewegung': 'Zehn Minuten nach draußen reichen schon.', 'Wärme': 'Mach dir etwas Warmes zu trinken und trink es in Ruhe, ohne nebenbei etwas anderes zu tun.', 'Gutes Essen': 'Koch dir heute dein Lieblingsessen oder gönn dir etwas, worauf du richtig Lust hast.' }]], w = {}, erg = el('div');
+      B.forEach(function (b) {
+        wahlGruppe(r, b[0], Object.keys(b[1]), function (o) {
+          w[b[0]] = b[1][o];
+          if (w.Kopf && w.Herz && w['Körper']) { buch('khk', [w.Kopf, w.Herz, w['Körper']]); erg.textContent = ''; erg.appendChild(ergebnis('Deine drei kleinen Dinge für die nächsten Tage', [['Für deinen Kopf', w.Kopf], ['Für dein Herz', w.Herz], ['Für deinen Körper', w['Körper']]])); erg.appendChild(text('Deine drei Ideen sind in deinem Dezember-Buch gespeichert. So findest du sie am 24. wieder.', 'hinweis')); }
+        });
+      });
+      r.appendChild(erg);
+    } },
+    17: { t: 'Sätze für die Familienfeier', b: function (r) {
+      r.appendChild(text('Welche Frage kommt bei dir bestimmt? Tippe sie an und du bekommst direkt darunter eine Antwort, die du dir merken kannst.'));
+      var Q = [['Und, schon jemand Neues?', 'Gerade bin ich gut mit mir beschäftigt. Wie geht es dir denn?'], ['Geht es dir denn jetzt besser?', 'Mal mehr, mal weniger. Heute versuche ich, mit meinen Gedanken einfach hier zu sein.'], ['Warum bist du so still?', 'Mir geht gerade viel durch den Kopf. Alles gut, ich brauche nur etwas Ruhe.'], ['Wie läuft es bei der Arbeit?', 'Danke, dass du fragst. Heute möchte ich mal abschalten. Wie läuft es denn bei dir?'], ['Und, wie geht es jetzt bei dir weiter?', 'Ich lasse das gerade in Ruhe entstehen. Ich muss das heute noch nicht wissen.'], ['Du musst jetzt mal nach vorn schauen.', 'Das mache ich schon, nur in meinem Tempo.']];
+      var offen = null;
+      function zeigeUnter(knopfEl, s) {
+        if (offen) offen.remove();
+        offen = el('div', { class: 'spalte antwort' }, [el('div', { class: 'karte' }, [el('p', { class: 'satz', style: 'font-size:18px', text: s })])]);
+        knopfEl.after(offen);
+      }
+      Q.forEach(function (q) { var b = knopf(q[0], function () { zeigeUnter(b, q[1]); }, 'hell'); r.appendChild(b); });
+      var f = null;
+      var U = ['Danke, dass du fragst. Darüber möchte ich heute nicht sprechen.', 'Das sortiere ich gerade noch für mich. Wenn ich so weit bin, erzähle ich es dir.', 'Heute möchte ich den Tag einfach genießen. Lass uns über etwas anderes reden.'];
+      r.appendChild(text('Und wenn eine ganz andere Frage kommt: „' + zufall(U) + '“ passt fast immer.', 'hinweis'));
+    } },
+    18: { t: 'Bevor du es tust', b: function (r) {
+      r.appendChild(text('Manchmal möchten wir etwas tun und merken danach, dass es uns nicht gutgetan hat. Wenn du gerade vor so etwas stehst, nimm dir vorher einen Moment für drei kurze Fragen. Wenn das gerade nicht auf dich zutrifft, bleibt dieses Türchen für später offen.'));
+      var f = el('input', { class: 'feld', id: 'bevor', maxlength: '80', placeholder: 'Zum Beispiel jemandem schreiben, zusagen, absagen', 'aria-label': 'Was möchtest du gerade tun?', autocomplete: 'off' });
+      var buehne = el('div', { class: 'spalte' });
+      var F = ['Was fühlst du gerade, wenn du daran denkst?', 'Was erhoffst du dir davon?', 'Wie geht es dir morgen damit, wenn du es tust? Und wenn du es nicht tust?'];
+      r.appendChild(el('label', { for: 'bevor', text: 'Was möchtest du gerade tun?' })); r.appendChild(f);
+      var los = knopf('Drei Fragen starten', function () {
+        if (!f.value.trim()) { f.focus(); return; }
+        los.hidden = true;
+        var i = 0, antw = [];
+        (function zeig() {
+          buehne.textContent = '';
+          if (i >= 3) {
+            buehne.appendChild(ergebnis('Deine Antworten', [['Das möchtest du tun', f.value.trim()]].concat(F.map(function (q, n) { return [q, antw[n] || '–']; }))));
+            buehne.appendChild(text('Nimm dir deine Antworten als Erinnerung mit. Wenn du in Zukunft vor einer Entscheidung stehst, stell dir diese drei Fragen wieder. Sie helfen dir, dich für das zu entscheiden, was dir auch morgen noch guttut.'));
+            return;
+          }
+          buehne.appendChild(el('h3', { text: 'Frage ' + (i + 1) + ' von 3' }));
+          buehne.appendChild(el('p', { text: F[i] }));
+          var ta = el('textarea', { class: 'feld', 'aria-label': F[i], placeholder: 'Nur für dich', style: 'min-height:80px' });
+          buehne.appendChild(ta);
+          buehne.appendChild(knopf(i < 2 ? 'Weiter' : 'Fertig', function () { antw[i] = ta.value.trim(); i++; zeig(); }));
+        })();
+      });
+      r.appendChild(los); r.appendChild(buehne);
+      r.appendChild(einladung('Wenn dich so eine Situation immer wieder einholt, schauen wir sie uns gern gemeinsam an.', 'call'));
+    } },
+    19: { t: 'Was gibt mir Energie?', b: function (r) {
+      r.appendChild(text('Hier findest du Dinge aus deinem Alltag. Entscheide bei jedem, ob es dir gerade Kraft gibt oder Kraft nimmt. Hier gibt es kein Richtig. So siehst du, was dir guttut und was dich Energie kostet.'));
+      var A = ['Social Media', 'Zeit allein', 'Familienbesuche', 'Bewegung', 'Weihnachtsvorbereitungen', 'Gespräche mit Freundinnen', 'Nachrichten beantworten', 'Früh schlafen'], w = {}, erg = el('div', { class: 'spalte' }), liste = el('div');
+      function auswerten() {
+        if (Object.keys(w).length < A.length) return;
+        var gi = A.filter(function (x) { return w[x] === 'g'; }), ne = A.filter(function (x) { return w[x] === 'n'; });
+        erg.textContent = '';
+        buch('energie', { gi: gi, ne: ne });
+        erg.appendChild(ergebnis('Dein Energie-Check', [['Das gibt dir Kraft', gi.join(', ') || 'Gerade nichts davon. Auch das darf sein.'], ['Das nimmt dir Kraft', ne.join(', ') || 'Nichts davon. Wie schön.']]));
+        var fr = [];
+        if (ne.length) fr.push('Wo darfst du diese Woche kürzertreten? Zum Beispiel bei: ' + ne[0] + '.');
+        if (gi.length) fr.push('Und wann planst du diese Woche bewusst Zeit ein für: ' + gi[0] + '?');
+        if (fr.length) erg.appendChild(el('div', { class: 'frage-karte' }, [el('h3', { text: 'Deine Fragen für diese Woche' })].concat(fr.map(function (q) { return el('p', { text: q }); }))));
+        erg.scrollIntoView({ behavior: ruhig ? 'auto' : 'smooth', block: 'nearest' });
+      }
+      function zeile(a) {
+        var g = el('button', { type: 'button', class: 'mini', text: 'gibt' }), n = el('button', { type: 'button', class: 'mini', text: 'nimmt' });
+        function set(v) { w[a] = v; g.classList.toggle('an', v === 'g'); n.classList.toggle('an', v === 'n'); auswerten(); }
+        g.addEventListener('click', function () { set('g'); }); n.addEventListener('click', function () { set('n'); });
+        liste.appendChild(el('div', { class: 'zeile-sort' }, [el('span', { text: a }), g, n]));
+      }
+      A.forEach(zeile);
+      r.appendChild(liste);
+      var f = el('input', { class: 'feld', id: 'eigen19', maxlength: '40', placeholder: 'Etwas Eigenes hinzufügen', 'aria-label': 'Etwas Eigenes', autocomplete: 'off' });
+      r.appendChild(f);
+      r.appendChild(knopf('Hinzufügen', function () { var t = f.value.trim(); if (!t || A.indexOf(t) > -1) { f.focus(); return; } A.push(t); zeile(t); f.value = ''; erg.textContent = ''; }, 'hell'));
+      r.appendChild(erg);
+      r.appendChild(einladung('Dein Energie-Check ist ein guter Anfang. Im kostenlosen Wegweiser-Call nehmen wir ihn als Grundlage, schauen uns gemeinsam deine aktuelle Situation an und was sich verändern darf.', 'call'));
+    } },
+    20: { t: 'Bring dein Haus zum Leuchten', b: function (r) {
+      r.appendChild(text('Schreib 6 schöne Dinge aus diesem Jahr auf, egal wie klein. Mit jedem leuchtet ein Fenster auf, bis dein ganzes Haus strahlt.'));
+      var haus = document.createElement('div');
+      haus.innerHTML = '<svg class="haus" viewBox="0 0 334 300" aria-hidden="true"><defs><filter id="leuchten" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7"/></filter><linearGradient id="wand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4ecd9"/><stop offset="1" stop-color="#e6d9bd"/></linearGradient></defs><g fill="#fff" opacity=".7"><circle cx="252" cy="22" r="7"/><circle cx="262" cy="10" r="9"/><circle cx="276" cy="4" r="6"/></g><rect x="238" y="34" width="28" height="48" fill="#8a6a45"/><rect x="234" y="30" width="36" height="9" rx="4" fill="#fff"/><g fill="#3f5c4a"><path d="M14 270 L40 196 L66 270Z"/><path d="M20 236 L40 176 L60 236Z"/></g><g fill="#fff" opacity=".9"><path d="M33 192 L40 176 L47 192 L43 189 L40 193 L37 189Z"/></g><g fill="#527160"><path d="M268 272 L296 186 L324 272Z"/><path d="M275 232 L296 166 L317 232Z"/></g><g fill="#fff" opacity=".9"><path d="M289 184 L296 166 L303 184 L299 181 L296 185 L293 181Z"/></g><rect x="48" y="116" width="238" height="160" fill="url(#wand)"/><g stroke="#d9c9a6" stroke-width="1"><line x1="48" y1="132" x2="286" y2="132"/><line x1="48" y1="148" x2="286" y2="148"/><line x1="48" y1="164" x2="286" y2="164"/><line x1="48" y1="180" x2="286" y2="180"/><line x1="48" y1="196" x2="286" y2="196"/><line x1="48" y1="212" x2="286" y2="212"/><line x1="48" y1="228" x2="286" y2="228"/><line x1="48" y1="244" x2="286" y2="244"/><line x1="48" y1="260" x2="286" y2="260"/></g><path d="M30 122 L167 30 L304 122 Z" fill="#9c3f3a"/><path d="M20 124 L167 24 L314 124 C306 131 298 126 291 130 L167 48 L43 130 C36 126 28 131 20 124Z" fill="#fff"/><path d="M150 37 L167 24 L184 37 C178 41 172 37 167 41 C162 37 156 41 150 37Z" fill="#fff"/><g fill="#fff"><path d="M66 127 l3 9 l3 -9Z"/><path d="M98 106 l3 9 l3 -9Z"/><path d="M128 86 l3 9 l3 -9Z"/><path d="M204 86 l3 9 l3 -9Z"/><path d="M232 106 l3 9 l3 -9Z"/><path d="M262 127 l3 9 l3 -9Z"/></g><g class="glanz"></g><rect class="fenster" data-i="0" x="68" y="136" width="34" height="40" rx="3" fill="#41525c"/><rect class="fenster" data-i="1" x="150" y="136" width="34" height="40" rx="3" fill="#41525c"/><rect class="fenster" data-i="2" x="232" y="136" width="34" height="40" rx="3" fill="#41525c"/><rect class="fenster" data-i="3" x="68" y="206" width="34" height="40" rx="3" fill="#41525c"/><rect class="fenster" data-i="4" x="232" y="206" width="34" height="40" rx="3" fill="#41525c"/><circle class="fenster" data-i="5" cx="167" cy="92" r="15" fill="#41525c"/><g stroke="#f7f1e3" stroke-width="2.5"><rect x="68" y="136" width="34" height="40" rx="3" fill="none" stroke="#8a6a45" stroke-width="3"/><line x1="85" y1="138" x2="85" y2="174"/><line x1="70" y1="156" x2="100" y2="156"/></g><rect x="65" y="176" width="40" height="5" rx="2" fill="#fff"/><g stroke="#f7f1e3" stroke-width="2.5"><rect x="150" y="136" width="34" height="40" rx="3" fill="none" stroke="#8a6a45" stroke-width="3"/><line x1="167" y1="138" x2="167" y2="174"/><line x1="152" y1="156" x2="182" y2="156"/></g><rect x="147" y="176" width="40" height="5" rx="2" fill="#fff"/><g stroke="#f7f1e3" stroke-width="2.5"><rect x="232" y="136" width="34" height="40" rx="3" fill="none" stroke="#8a6a45" stroke-width="3"/><line x1="249" y1="138" x2="249" y2="174"/><line x1="234" y1="156" x2="264" y2="156"/></g><rect x="229" y="176" width="40" height="5" rx="2" fill="#fff"/><g stroke="#f7f1e3" stroke-width="2.5"><rect x="68" y="206" width="34" height="40" rx="3" fill="none" stroke="#8a6a45" stroke-width="3"/><line x1="85" y1="208" x2="85" y2="244"/><line x1="70" y1="226" x2="100" y2="226"/></g><rect x="65" y="246" width="40" height="5" rx="2" fill="#fff"/><g stroke="#f7f1e3" stroke-width="2.5"><rect x="232" y="206" width="34" height="40" rx="3" fill="none" stroke="#8a6a45" stroke-width="3"/><line x1="249" y1="208" x2="249" y2="244"/><line x1="234" y1="226" x2="264" y2="226"/></g><rect x="229" y="246" width="40" height="5" rx="2" fill="#fff"/><circle cx="167" cy="92" r="15" fill="none" stroke="#8a6a45" stroke-width="3"/><g stroke="#f7f1e3" stroke-width="2.5"><line x1="167" y1="79" x2="167" y2="105"/><line x1="154" y1="92" x2="180" y2="92"/></g><rect x="150" y="212" width="34" height="64" rx="17" fill="#3f5c4a"/><circle cx="167" cy="232" r="9" fill="none" stroke="#527160" stroke-width="4"/><circle cx="167" cy="240" r="2.2" fill="#9c3f3a"/><circle cx="178" cy="252" r="2" fill="#d3b26f"/><path d="M0 276 C60 266 120 280 167 274 C220 268 280 280 334 272 L334 300 L0 300 Z" fill="#fff"/></svg>';
+      var svg = haus.firstChild; r.appendChild(svg);
+      var ANZ = 6, liste = [], ul = el('ul', { class: 'lichter-liste' }), erg = el('div');
+      var f = el('input', { class: 'feld', id: 'licht', maxlength: '60', placeholder: 'Etwas Schönes aus diesem Jahr', 'aria-label': 'Etwas Schönes aus diesem Jahr', autocomplete: 'off' });
+      function zuenden() {
+        var t = f.value.trim(); if (!t) { f.focus(); return; }
+        if (liste.length >= ANZ) return;
+        var fe = svg.querySelector('.fenster[data-i="' + liste.length + '"]');
+        var g = fe.cloneNode(); g.removeAttribute('class'); g.setAttribute('fill', '#f6d98a'); g.setAttribute('filter', 'url(#leuchten)');
+        svg.querySelector('.glanz').appendChild(g);
+        fe.setAttribute('fill', '#f8e3a3');
+        liste.push(t); ul.appendChild(el('li', { text: t })); f.value = ''; buch('lichter', liste.slice());
+        if (liste.length === ANZ) { f.hidden = true; los.hidden = true; ul.hidden = true; erg.appendChild(ergebnis('Mein 2026 in Lichtern', liste.map(function (x) { return [x, '']; }))); erg.appendChild(el('p', { class: 'satz', style: 'font-size:18px', text: 'Dein Haus leuchtet. Auch das gehört zu deinem Jahr.' })); erg.appendChild(bild({ motiv: 'nacht', titel: 'Mein 2026 in Lichtern', teile: [{ s: liste.join('\n'), g: 34 }] })); }
+      }
+      var los = knopf('Licht anzünden', zuenden);
+      f.addEventListener('keydown', function (e) { if (e.key === 'Enter') zuenden(); });
+      r.appendChild(f); r.appendChild(los); r.appendChild(ul); r.appendChild(erg);
+      (speicher.lies('buch', {}).lichter || []).slice(0, ANZ).forEach(function (t) { f.value = t; zuenden(); });
+      r.appendChild(einladung('Deine Lichter zeigen dir, was dir guttut. Lass uns im neuen Jahr mehr davon in dein Leben holen: Am 28.12. gestalten wir zusammen dein Vision Board.', 'webinar'));
+    } },
+    21: { t: 'Ab heute wird es wieder heller', b: function (r) {
+      r.appendChild(text('Heute ist die längste Nacht des Jahres. Ab morgen werden die Tage wieder heller. Schreib deinen Wunsch auf und tippe auf die Kerze, um sie auszupusten. Dein Wunsch steigt dann mit dem Rauch auf.'));
+      var wunschEl = el('p', { class: 'kerzen-wunsch' });
+      var f = el('input', { class: 'feld', id: 'kerzenwunsch', maxlength: '60', placeholder: 'Mein Wunsch', 'aria-label': 'Dein Wunsch', autocomplete: 'off', on: { input: function (e) { wunschEl.textContent = e.target.value; } } });
+      var fl = el('div', { class: 'flamme' }), ra = el('div', { class: 'rauch' }), erg = el('div');
+      var kz = el('button', { type: 'button', class: 'kerze-wrap', 'aria-label': 'Kerze auspusten', on: { click: function () {
+        if (fl.hidden) return;
+        if (!f.value.trim()) { f.focus(); hinweis21.textContent = 'Schreib zuerst deinen Wunsch auf.'; return; }
+        hinweis21.textContent = ''; fl.hidden = true; ra.classList.add('los'); wunschEl.classList.add('steigt'); f.value = '';
+        erg.appendChild(el('p', { class: 'satz', style: 'font-size:18px', text: 'Dein Wunsch ist auf dem Weg und du auch.' }));
+      } } }, [wunschEl, el('div', { class: 'kerze' }), el('div', { class: 'docht' }), fl, ra]);
+      var hinweis21 = text('', 'hinweis');
+      r.appendChild(f); r.appendChild(hinweis21); r.appendChild(kz); r.appendChild(erg);
+      r.appendChild(einladung('Ein Wunsch ist der erste Schritt. Damit er nicht nur ein Wunsch bleibt, geben wir ihm am 28.12. im Vision-Board-Webinar ein Bild und eine Richtung.', 'webinar'));
+    } },
+    22: { t: 'Gut durch die Feiertage', b: function (r) {
+      r.appendChild(text('Die Feiertage können schön sein und trotzdem viel. Beantworte drei kurze Fragen, dann weißt du, was dir an diesen Tagen Halt gibt.'));
+      var F = [
+        ['zu', 'Wenn es mir zu viel wird, gehe ich kurz …', ['nach draußen', 'in mein Zimmer', 'in einen anderen Raum', 'ins Bad'], 'Oder wohin gehst du?'],
+        ['wer', 'Wer gibt dir an diesen Tagen Halt?', ['meine Freundin', 'meine Schwester', 'meine Mama', 'ich selbst', 'gerade niemand'], 'Oder wer gibt dir Halt?'],
+        ['satz', 'Welcher Satz begleitet dich?', ['Ich darf gehen, wann ich will.', 'Ich muss niemandem etwas beweisen.', 'Es sind nur ein paar Tage.', 'Ich darf bei mir bleiben.'], 'Oder dein eigener Satz']
+      ], w = {}, nr = 0, buehne = el('div', { class: 'spalte' });
+      function zeig() {
+        buehne.textContent = '';
+        if (nr >= F.length) {
+          var wenn = 'Wenn es mir zu viel wird, gehe ich kurz ' + w.zu + '.';
+          var halt = (w.wer === 'ich selbst' || w.wer === 'gerade niemand') ? 'Halt gebe ich mir selbst. Und das reicht für heute.' : 'Halt gibt mir ' + w.wer + '.';
+          buch('feiertage', ['„' + w.satz + '“', wenn, halt]);
+          buehne.appendChild(ergebnis('Das nehme ich mit in die Feiertage', [[wenn, ''], [halt, ''], ['Mein Satz für die Feiertage', '„' + w.satz + '“']]));
+          buehne.appendChild(speicherKnopf(listenBild('Gut durch die Feiertage', [wenn, halt, 'Mein Satz: „' + w.satz + '“']), 'feiertage.png', 'Als Bild speichern'));
+          buehne.appendChild(el('button', { type: 'button', class: 'textknopf', text: 'Noch einmal ändern', on: { click: function () { nr = 0; w = {}; zeig(); } } }));
+          return;
+        }
+        var q = F[nr], weiter = knopf(nr < F.length - 1 ? 'Weiter' : 'Mein Plan', function () { nr++; zeig(); });
+        weiter.disabled = !w[q[0]];
+        buehne.appendChild(el('p', { class: 'hinweis', text: 'Frage ' + (nr + 1) + ' von 3' }));
+        var g = el('div', { class: 'spalte' });
+        wahlGruppe(g, q[1], q[2], function (o) { w[q[0]] = o; weiter.disabled = false; }, q[3]);
+        [].forEach.call(g.querySelectorAll('.chip'), function (c) { c.classList.add('klein'); });
+        buehne.appendChild(g); buehne.appendChild(weiter);
+      }
+      zeig(); r.appendChild(buehne);
+      r.appendChild(einladung('Nach den Feiertagen kommt ein neues Jahr. Damit es sich nicht wieder genauso anfühlt: Am 28.12. gestalten wir gemeinsam dein Vision Board, kostenlos und live mit mir.', 'webinar'));
+    } },
+    23: { t: 'Koffer packen für 2027', b: function (r) {
+      r.appendChild(text('Was soll mit dir ins neue Jahr? Zieh die Begriffe in den Koffer oder tippe sie an.'));
+      var mit = [];
+      var koffer = el('div', { class: 'k4' }), innen = el('div', { class: 'koffer-fach' });
+      var deckel = el('div', { class: 'k4-teil k4-deckel' }), scharnier = el('div', { class: 'k4-teil k4-scharnier' }), boden = el('div', { class: 'k4-teil k4-boden' });
+      var fInnen = el('div', { class: 'k4-flaeche' }), fAussen = el('div', { class: 'k4-flaeche aussen' });
+      fInnen.innerHTML = '<svg viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="kdr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eadfcf"/><stop offset=".5" stop-color="#dccbb3"/><stop offset="1" stop-color="#c8b496"/></linearGradient><linearGradient id="kdf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8dccb"/><stop offset=".25" stop-color="#efe5d7"/><stop offset="1" stop-color="#f3ebdf"/></linearGradient></defs><rect x="96" y="-2" width="108" height="10" rx="5" fill="#c4ab88"/><rect x="294" y="22" width="8" height="26" rx="4" fill="#2b2b2b"/><rect x="294" y="152" width="8" height="26" rx="4" fill="#2b2b2b"/><rect x="2" y="4" width="292" height="192" rx="26" fill="url(#kdr)"/><rect x="6" y="8" width="284" height="184" rx="23" fill="none" stroke="#b49d7c" stroke-width="1.4"/><rect x="14" y="16" width="268" height="168" rx="18" fill="url(#kdf)"/><rect x="14" y="16" width="268" height="168" rx="18" fill="none" stroke="rgba(120,96,64,.16)" stroke-width="6"/></svg>';
+      fAussen.innerHTML = '<svg viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="kar" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eadfcf"/><stop offset=".5" stop-color="#dccbb3"/><stop offset="1" stop-color="#c8b496"/></linearGradient><linearGradient id="kaf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8dccb"/><stop offset=".25" stop-color="#efe5d7"/><stop offset="1" stop-color="#f3ebdf"/></linearGradient></defs><rect x="294" y="22" width="8" height="26" rx="4" fill="#2b2b2b"/><rect x="294" y="152" width="8" height="26" rx="4" fill="#2b2b2b"/><rect x="2" y="4" width="292" height="192" rx="26" fill="url(#kar)"/><path d="M30 38 H262" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/><path d="M30 42 H262" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M30 56 H262" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/><path d="M30 60 H262" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M30 74 H262" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/><path d="M30 78 H262" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M30 92 H262" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/><path d="M30 96 H262" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M30 110 H262" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/><path d="M30 114 H262" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M30 128 H262" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/><path d="M30 132 H262" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M30 146 H262" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/><path d="M30 150 H262" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M30 164 H262" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/><path d="M30 168 H262" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><rect x="6" y="8" width="284" height="184" rx="23" fill="none" stroke="#b49d7c" stroke-width="1.4"/></svg>';
+      deckel.appendChild(fInnen); deckel.appendChild(fAussen);
+      scharnier.innerHTML = '<svg viewBox="0 0 300 18" preserveAspectRatio="none" aria-hidden="true"><rect x="110" y="1" width="80" height="16" rx="8" fill="#e6d8c3" stroke="#c8b496"/></svg>';
+      boden.innerHTML = '<svg viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="kbr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eadfcf"/><stop offset=".5" stop-color="#dccbb3"/><stop offset="1" stop-color="#c8b496"/></linearGradient><linearGradient id="kbf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8dccb"/><stop offset=".25" stop-color="#efe5d7"/><stop offset="1" stop-color="#f3ebdf"/></linearGradient></defs><rect x="294" y="22" width="8" height="26" rx="4" fill="#2b2b2b"/><rect x="294" y="152" width="8" height="26" rx="4" fill="#2b2b2b"/><rect x="2" y="4" width="292" height="192" rx="26" fill="url(#kbr)"/><rect x="6" y="8" width="284" height="184" rx="23" fill="none" stroke="#b49d7c" stroke-width="1.4"/><rect x="14" y="16" width="268" height="168" rx="18" fill="url(#kbf)"/><rect x="14" y="16" width="268" height="168" rx="18" fill="none" stroke="rgba(120,96,64,.16)" stroke-width="6"/></svg>';
+      var leer = el('p', { class: 'koffer-leer', text: 'Dein Koffer ist noch leer.' }); innen.appendChild(leer);
+      boden.appendChild(innen);
+      koffer.appendChild(deckel); koffer.appendChild(scharnier); koffer.appendChild(boden);
+      var chips = el('div', { class: 'chips' }), ende = el('div', { class: 'spalte' });
+      function pruefeLeer() { leer.hidden = mit.length > 0; }
+      function pack(c, w) {
+        mit.push(w); c.remove(); pruefeLeer();
+        var z = el('span', { class: 'im-koffer', text: w, role: 'button', tabindex: '0', title: 'Wieder herausnehmen' });
+        function raus() { mit.splice(mit.indexOf(w), 1); z.remove(); zettel(w); pruefeLeer(); }
+        z.addEventListener('click', raus); z.addEventListener('keydown', function (e) { if (e.key === 'Enter') raus(); });
+        innen.appendChild(z);
+      }
+      function zettel(w) {
+        var c = el('button', { type: 'button', class: 'chip zettel', text: w }), start = null, zieht = false;
+        c.addEventListener('pointerdown', function (e) { start = [e.clientX, e.clientY]; zieht = false; try { c.setPointerCapture(e.pointerId); } catch (err) {} });
+        c.addEventListener('pointermove', function (e) {
+          if (!start) return; var dx = e.clientX - start[0], dy = e.clientY - start[1];
+          if (!zieht && Math.abs(dx) + Math.abs(dy) > 7) { zieht = true; c.classList.add('zieht'); }
+          if (zieht) { c.style.transform = 'translate(' + dx + 'px,' + dy + 'px)'; var q = innen.getBoundingClientRect(); koffer.classList.toggle('drueber', e.clientX > q.left && e.clientX < q.right && e.clientY > q.top && e.clientY < q.bottom); }
+        });
+        c.addEventListener('pointerup', function (e) {
+          if (!start) return; start = null; c.classList.remove('zieht'); koffer.classList.remove('drueber');
+          var q = innen.getBoundingClientRect(), drin = e.clientX > q.left && e.clientX < q.right && e.clientY > q.top && e.clientY < q.bottom;
+          if (!zieht || drin) pack(c, w); else c.style.transform = '';
+        });
+        c.addEventListener('pointercancel', function () { start = null; c.style.transform = ''; c.classList.remove('zieht'); koffer.classList.remove('drueber'); });
+        c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pack(c, w); } });
+        chips.appendChild(c);
+      }
+      ['Mut', 'Mein Lachen', 'Vertrauen', 'Meine Freundinnen', 'Geduld mit mir', 'Neugier', 'Leichtigkeit', 'Meine Träume'].forEach(zettel);
+      var f = el('input', { class: 'feld', id: 'kofferWort', maxlength: '30', placeholder: 'Dein eigenes Wort', 'aria-label': 'Dein eigenes Wort', autocomplete: 'off' });
+      var neu = knopf('Zettel hinzufügen', function () { var w = f.value.trim(); if (!w) { f.focus(); return; } zettel(w); f.value = ''; }, 'hell');
+      r.appendChild(koffer); r.appendChild(chips); r.appendChild(f); r.appendChild(neu);
+      var zu = knopf('Koffer schließen', function () {
+        if (!mit.length) { ende.textContent = ''; ende.appendChild(text('Leg zuerst ein paar Zettel in deinen Koffer.', 'hinweis')); return; }
+        buch('koffer', mit.slice());
+        chips.hidden = true; f.hidden = true; neu.hidden = true; zu.hidden = true;
+        koffer.classList.add('zu');
+        setTimeout(function () {
+          koffer.classList.add('k4-weg');
+          setTimeout(function () {
+            var platzhalter = document.createElement('div'); platzhalter.innerHTML = '<svg class="koffer-zu" viewBox="0 0 240 380" aria-hidden="true"><defs><linearGradient id="kzr" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9c8b0"/><stop offset=".35" stop-color="#eadfcf"/><stop offset="1" stop-color="#cdb99c"/></linearGradient><linearGradient id="kzs" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c7cbc8"/><stop offset=".5" stop-color="#eef0ee"/><stop offset="1" stop-color="#b9bdb9"/></linearGradient></defs><rect x="88" y="34" width="10" height="70" fill="url(#kzs)"/><rect x="142" y="34" width="10" height="70" fill="url(#kzs)"/><rect x="80" y="14" width="80" height="26" rx="12" fill="#c4ab88"/><rect x="74" y="92" width="92" height="14" rx="7" fill="#c4ab88"/><rect x="22" y="100" width="196" height="236" rx="30" fill="url(#kzr)"/><rect x="210" y="170" width="16" height="80" rx="8" fill="#c4ab88"/><path d="M52 118 V318" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round"/><path d="M56 118 V318" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M68 118 V318" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round"/><path d="M72 118 V318" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M84 118 V318" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round"/><path d="M88 118 V318" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M100 118 V318" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round"/><path d="M104 118 V318" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M116 118 V318" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round"/><path d="M120 118 V318" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M132 118 V318" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round"/><path d="M136 118 V318" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M148 118 V318" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round"/><path d="M152 118 V318" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M164 118 V318" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round"/><path d="M168 118 V318" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M180 118 V318" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round"/><path d="M184 118 V318" stroke="rgba(150,124,90,.35)" stroke-width="2" stroke-linecap="round"/><path d="M26 326 Q30 336 44 336 H196 Q210 336 214 326" fill="none" stroke="#b49d7c" stroke-width="1.5"/><path d="M22 300 H52 Q60 300 60 312 V336 H50 Q24 336 22 314 Z" fill="#cdb99c"/><path d="M218 300 H188 Q180 300 180 312 V336 H190 Q216 336 218 314 Z" fill="#cdb99c"/><g><circle cx="44" cy="352" r="16" fill="#222"/><circle cx="44" cy="352" r="7" fill="#d9c8b0"/><circle cx="196" cy="352" r="16" fill="#222"/><circle cx="196" cy="352" r="7" fill="#d9c8b0"/></g><path d="M150 98 C170 110 186 124 196 140" fill="none" stroke="#8a6a45" stroke-width="2"/><g transform="rotate(16 206 160)"><rect x="168" y="140" width="80" height="40" rx="8" fill="#f3e3bb" stroke="#b8975a"/><circle cx="178" cy="160" r="4" fill="#c4ab88"/><text x="214" y="168" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-style="italic" font-weight="500" font-size="22" fill="#3f5c4a">2027</text></g></svg>';
+            koffer.replaceWith(platzhalter.firstChild);
+            ende.textContent = '';
+            ende.appendChild(ergebnis('Das kommt mit nach 2027', mit.map(function (x) { return [x, '']; })));
+            ende.appendChild(satzKarte('Dein Koffer ist gepackt. 2027 darf kommen.'));
+            ende.appendChild(einladung('Du weißt jetzt, was mit dir ins neue Jahr kommt. Wohin die Reise gehen soll, schauen wir uns am 28.12. im Vision-Board-Webinar gemeinsam an.', 'webinar'));
+          }, ruhig ? 0 : 480);
+        }, ruhig ? 0 : 1050);
+      });
+      r.appendChild(zu); r.appendChild(ende);
+    } },
+    24: { t: 'Frohe Weihnachten', b: function (r) {
+      r.appendChild(audio('tuerchen-24.mp4', 'Meine Weihnachtsnachricht für dich', 'Frohe Weihnachten von mir'));
+      r.appendChild(einladung('Du hast Angst, den Weg ins neue Jahr allein zu gehen? Das musst du nicht. Am 28.12. sehen wir uns im Vision-Board-Webinar. Dort zeige ich dir, wie du deinem neuen Jahr eine Richtung gibst, die sich nach dir anfühlt.', 'webinar'));
+      r.appendChild(el('p', { class: 'geschenk-hinweis', text: 'Ganz unten wartet noch ein Geschenk auf dich ↓' }));
+
+      r.appendChild(el('h2', { class: 'abschnitt', text: 'Das ist für dich' }));
+      r.appendChild(el('h3', { text: 'Dein Sternbild ist vollständig' }));
+      var box = el('div', { class: 'himmel-bild' }); box.innerHTML = zeichneHimmel(meinZeichen, alleAn, true); r.appendChild(box);
+      r.appendChild(el('p', { class: 'himmel-name', text: meinZeichen !== null ? ZEICHEN[meinZeichen].n : 'Der Große Wagen' }));
+
+      var buchBox = el('div');
+      var buchKnopf = knopf('Dein Dezember zum Durchblättern öffnen', function () {
+        if (buchBox.firstChild) { buchBox.textContent = ''; buchKnopf.textContent = 'Dein Dezember zum Durchblättern öffnen'; return; }
+        buchBox.appendChild(dezemberBuchBlaettern()); buchKnopf.textContent = 'Dein Dezember schließen';
+      }, 'hell');
+      r.appendChild(el('h3', { text: 'Dein Dezember-Buch' }));
+      r.appendChild(text('Alles, was du in den letzten Wochen für dich erarbeitet hast, an einem Ort.'));
+      r.appendChild(buchKnopf); r.appendChild(buchBox);
+
+      r.appendChild(el('h3', { text: 'Drei Briefe für die Feiertage' }));
+      r.appendChild(text('Öffne sie, wann immer du sie brauchst.'));
+      var B = [
+        ['Für heute Abend', 'Meine Liebe, egal wie dieser Abend für dich wird: Er muss nicht perfekt sein. Vielleicht sitzt du mit deiner Familie zusammen, vielleicht bist du allein oder irgendwo dazwischen. Vielleicht fühlt sich alles anders an als früher. Auch das ist okay. Du darfst lachen, du darfst still sein und du darfst weinen. Und wenn es dir zu viel wird, darfst du dich kurz rausnehmen und einen Moment nur für dich haben. Was du in diesem Jahr getragen hast, sieht nicht jede. Ich sehe es. Und ich bin stolz auf dich.'],
+        ['Wenn es still wird', 'Wenn die Tür zugeht und es still wird, kommt manchmal alles hoch: die Erinnerungen, die Fragen, das Alleinsein. Vielleicht fragst du dich, ob es jemals wieder leichter wird. Das ist okay. Es heißt nicht, dass du zurückfällst. Es heißt, dass du fühlst. Und das ist mutig. Du musst heute Abend nichts verstehen und nichts lösen. Mach dir etwas Warmes, kuschel dich ein und sei weich mit dir. Atme einmal tief durch und erinnere dich daran, wie viel du schon geschafft hast. Morgen ist ein neuer Tag und ich bin in Gedanken bei dir.'],
+        ['Für morgen früh', 'Guten Morgen, meine Liebe. Du hast es geschafft, Schritt für Schritt, Tag für Tag. Heute darf ein ganz normaler Tag sein, ohne Erwartungen und ohne Programm. Mach dir einen Kaffee, schau aus dem Fenster und frag dich: Was würde mir heute guttun? Dann gönn dir genau das. Du hast es dir verdient.']
+      ];
+      var gr = el('div', { class: 'umschlaege' }), brief = el('div');
+      B.forEach(function (b) { var u = el('button', { type: 'button', class: 'umschlag', on: { click: function () { [].forEach.call(gr.children, function (c) { c.classList.remove('an'); }); u.classList.add('an'); brief.textContent = ''; brief.appendChild(el('div', { class: 'brief' }, [el('p', { text: b[1] }), el('p', { class: 'gruss', text: 'Fühl dich gedrückt,' }), el('p', { class: 'gruss', style: 'margin-top:0', text: 'deine Yassi' })])); } } }, [el('span', { text: b[0] })]); gr.appendChild(u); });
+      r.appendChild(gr); r.appendChild(brief);
+
+      r.appendChild(el('h2', { class: 'abschnitt', text: 'Dein Geschenk' }));
+      var buehne = el('div', { class: 'geschenk-buehne' });
+      var g = el('button', { type: 'button', class: 'geschenk-knopf', 'aria-label': 'Dein Geschenk öffnen', on: { click: function () {
+        if (g.classList.contains('auf')) return;
+        g.classList.add('auf');
+        if (!ruhig) for (var n = 0; n < 18; n++) { var a = n / 18 * Math.PI * 2, fu = el('span', { class: 'funke', style: '--dx:' + Math.round(Math.cos(a) * (70 + Math.random() * 50)) + 'px;--dy:' + Math.round(Math.sin(a) * (60 + Math.random() * 40) - 30) + 'px;animation-delay:' + (Math.random() * .2).toFixed(2) + 's' }); fu.innerHTML = '<svg viewBox="0 0 10 10"><path fill="' + (n % 3 ? '#d3b26f' : '#9c3f3a') + '" d="M5 0L6 4L10 5L6 6L5 10L4 6L0 5L4 4Z"/></svg>'; buehne.appendChild(fu); }
+        buehne.appendChild(el('div', { class: 'geschenk-karte' }, [
+          el('h3', { text: 'Dein Klarheits-Call' }),
+          el('p', { text: '30 Minuten nur mit mir, kostenlos, im Januar. Danach weißt du, was du im alten Jahr lässt, worauf du dich im neuen konzentrierst und was dein erster Schritt ist.' }),
+          el('p', { class: 'hinweis', text: 'Es ist ein sehr persönliches Geschenk, deshalb gibt es nur zehn Plätze.' }),
+          LINKS.klarheit ? el('a', { class: 'knopf cta', href: mitUtm(LINKS.klarheit), target: '_blank', rel: 'noopener', text: 'Klarheits-Call sichern' }) : el('span', { class: 'knopf cta', text: 'Klarheits-Call sichern (Link folgt)' }),
+          el('p', { class: 'hinweis', text: 'Alle Plätze schon vergeben? Dann trag dich auf meine Warteliste ein. Wenn ein Platz frei wird, melde ich mich bei dir.' }),
+          LINKS.warteliste ? el('a', { class: 'knopf hell cta', href: mitUtm(LINKS.warteliste), target: '_blank', rel: 'noopener', text: 'Auf die Warteliste' }) : el('span', { class: 'knopf hell cta', text: 'Auf die Warteliste (Link folgt)' })
+        ]));
+      } } });
+      g.innerHTML = '<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="18" y="50" width="84" height="60" rx="6" fill="#3f5c4a"/><rect x="54" y="50" width="12" height="60" fill="#d3b26f"/><g class="deckel"><rect x="12" y="34" width="96" height="20" rx="5" fill="#527160"/><rect x="54" y="34" width="12" height="20" fill="#d3b26f"/><path d="M60 34 C44 12 26 20 36 32 C40 36 50 35 60 34 Z M60 34 C76 12 94 20 84 32 C80 36 70 35 60 34 Z" fill="#d3b26f"/></g></svg>';
+      g.appendChild(el('span', { text: 'Tippe, um dein Geschenk zu öffnen' }));
+      buehne.appendChild(g);
+      r.appendChild(buehne);
+    } }
+
+  };
+
+  /* Gespeichertes Ergebnis zeigen, wenn ein Türchen noch einmal geöffnet wird */
+  var GESPEICHERT = { 2: 'leicht', 7: 'plan', 9: 'loslassen', 15: 'anker', 16: 'khk', 19: 'energie', 22: 'feiertage', 23: 'koffer' };
+  function zeigeGespeichert(n, innen) {
+    var key = GESPEICHERT[n]; if (!key) return;
+    var A = buchAbschnitte().filter(function (a) { return a[2] === key; }); if (!A.length) return;
+    A.forEach(function (a) { innen.appendChild(ergebnis(a[0], a[1].map(function (z) { return [z, '']; }))); });
+    innen.appendChild(text(n === 2 ? 'Das hast du schon festgehalten. Du kannst jederzeit etwas dazuschreiben.' : 'Das hast du hier schon für dich erarbeitet. Wenn du das Türchen noch einmal machst, ersetzt dein neues Ergebnis das alte.', 'hinweis'));
+  }
+
+  /* Blatt öffnen und schließen */
+  var aufraeumen = [];
+  function raeumeAuf() { aufraeumen.forEach(function (f) { try { f(); } catch (e) {} }); aufraeumen = []; }
+  var aktuelleTuer = null;
+  function oeffneBlatt(n) {
+    raeumeAuf();
+    offeneNr = n;
+    besucht[n] = 1; speicher.schreib('besucht', besucht);
+    var d = TUEREN[n], innen = $('blattInnen'); innen.textContent = '';
+    innen.appendChild(el('div', { class: 'blatt-kopf' }, [kranzEl(n), el('button', { id: 'zu', type: 'button', text: 'Zurück zum Kalender', on: { click: schliesse } })]));
+    innen.appendChild(el('h2', { text: d.t }));
+    zeigeGespeichert(n, innen);
+    d.b(innen);
+    var ADVENT = { 5: '2. Advent', 12: '3. Advent', 19: '4. Advent' };
+    var nachher = function () { innen.appendChild(el('a', { class: 'schwer-unten', href: 'https://ig.me/m/mindspiration_', target: '_blank', rel: 'noopener', text: 'Heute ist es schwer? Schreib mir auf Instagram 🤍' })); innen.appendChild(knopf('Zurück zum Kalender', schliesse, 'hell unten-zurueck')); };
+    if (ADVENT[n] && LINKS.community) {
+      innen.appendChild(einladung('Sonntage können sich im Dezember besonders leer anfühlen. Spring noch schnell in die Community, dann startest du morgen nicht allein in den Tag: Um 11 Uhr treffen wir uns live, trinken zusammen einen Kakao und verbringen deinen Adventssonntag gemeinsam.', 'community', 'Morgen ist der ' + ADVENT[n] + ' und du bist nicht allein'));
+    }
+    nachher();
+    var blatt = $('blatt'); blatt.hidden = false; blatt.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+    try { if (!(history.state && history.state.tuer)) history.pushState({ tuer: n }, ''); } catch (e) {}
+  }
+  function schliesse() {
+    if (history.state && history.state.tuer) { history.back(); return; }
+    schliesseJetzt();
+  }
+  window.addEventListener('popstate', function () { if (!$('blatt').hidden) schliesseJetzt(); });
+  function schliesseJetzt() {
+    offeneNr = 0;
+    raeumeAuf();
+    $('blatt').hidden = true; document.body.style.overflow = '';
+    $('blattInnen').textContent = '';
+    if (aktuelleTuer) { aktuelleTuer.classList.remove('auf'); aktuelleTuer.classList.add('geoeffnet'); haken(aktuelleTuer); aktuelleTuer.focus(); aktuelleTuer = null; }
+    himmel();
+  }
+  function haken(t) { if (t.querySelector('.haken')) return; var s = document.createElement('span'); s.innerHTML = '<svg class="haken" viewBox="0 0 10 10" aria-hidden="true"><path fill="currentColor" d="M5 0L6 4L10 5L6 6L5 10L4 6L0 5L4 4Z"/></svg>'; t.appendChild(s.firstChild); }
+
+  /* Heute ist es schwer */
+  function schwerZu() { raeumeAuf(); $('schwer').hidden = true; $('schwerInnen').textContent = ''; }
+  function zeigeSchwer() {
+    var innen = $('schwerInnen'); innen.textContent = '';
+    innen.appendChild(el('div', { class: 'blatt-kopf' }, [el('span'), el('button', { id: 'zu2', type: 'button', class: 'textknopf', text: 'Zurück', on: { click: schwerZu } })]));
+    innen.appendChild(el('h2', { text: 'Du bist nicht allein' }));
+    innen.appendChild(text('Manche Tage sind einfach schwer. Du musst gerade nichts lösen und nichts schaffen. Wenn es dir zu viel wird, schreib mir. Ich lese deine Nachricht und melde mich bei dir.'));
+    var ig = el('a', { class: 'knopf cta', href: 'https://www.instagram.com/mindspiration_/', text: 'Schreib mir auf Instagram' });
+    ig.addEventListener('click', function (e) { e.preventDefault(); var weg = false; var t = setTimeout(function () { if (!weg) location.href = 'https://www.instagram.com/mindspiration_/'; }, 900); document.addEventListener('visibilitychange', function () { if (document.hidden) { weg = true; clearTimeout(t); } }, { once: true }); location.href = 'instagram://user?username=mindspiration_'; });
+    innen.appendChild(ig);
+    $('schwer').hidden = false; $('schwer').scrollTop = 0;
+  }
+
+  /* Raster: Jedes Türchen hat seinen Kranz, die besonderen Tage leuchten etwas wärmer */
+  function tuerEl(n) {
+    var t = el('button', { type: 'button', class: 'tuer' + (FEST[n] ? ' fest' : '') + (besucht[n] ? ' geoeffnet' : ''), 'data-d': n, 'aria-label': 'Türchen ' + n + ' öffnen' }, [kranzEl(n)]);
+    if (n > OFFEN) { t.classList.add('zu'); t.setAttribute('aria-label', 'Türchen ' + n + ' öffnet sich am ' + n + '. Dezember'); }
+    t.addEventListener('click', function () {
+      if (n > OFFEN) { zeigeZu(n); return; }
+      aktuelleTuer = t; t.classList.add('auf');
+      setTimeout(function () { oeffneBlatt(n); }, ruhig ? 0 : 430);
+    });
+    if (besucht[n]) haken(t);
+    return el('div', { class: 'fach' }, [t]);
+  }
+  var zuTimer;
+  function zeigeZu(n) {
+    var h = document.querySelector('.zu-hinweis'); if (!h) { h = el('div', { class: 'zu-hinweis', role: 'status' }); document.body.appendChild(h); }
+    h.textContent = OFFEN === 0 ? 'Dein Kalender öffnet sich am 1. Dezember. Türchen ' + n + ' wartet bis zum ' + n + '. Dezember auf dich.' : 'Türchen ' + n + ' öffnet sich am ' + n + '. Dezember.';
+    h.hidden = false; clearTimeout(zuTimer); zuTimer = setTimeout(function () { h.hidden = true; }, 2800);
+  }
+  for (var n = 1; n <= 24; n++) $('raster').appendChild(tuerEl(n));
+  /* Countdown und Hinweis auf den ersten Advent */
+  $('countdown').textContent = BIS_START > 1 ? 'Noch ' + BIS_START + ' Tage, bis wir gemeinsam in den Dezember starten 🤍' : BIS_START === 1 ? 'Morgen starten wir gemeinsam in den Dezember 🤍' : (OFFEN > 0 && OFFEN < 24 && !vorschau) ? 'Heute ist Türchen ' + OFFEN + ' für dich da' : '';
+  if (H.year === 2026 && H.month === 11 && H.day <= 29 && LINKS.community) {
+    var tagText = H.day === 29 ? 'Heute' : H.day === 28 ? 'Morgen' : 'So, 29.11.';
+    $('adventHinweis').appendChild(einladung('Wir starten gemeinsam in die Adventszeit: live in der Community mit dem Call „Wie du gut durch den Dezember kommst“. Spring noch schnell rein, damit du nicht allein in diesen Monat gehst.', 'community', tagText + ', 11 Uhr: Community-Call zum 1. Advent'));
+  }
+  if (vorschau) $('vorschauHinweis').hidden = false;
+
+  /* ---------- Anmeldung: Vorname + E-Mail öffnen den Kalender ----------
+     Gespeichert wird im selben Lead-Speicher wie der Check-in (siehe /admin).
+     KONTAKT_PFLICHT: false = Kontakt-Häkchen ist freiwillig (empfohlen). true = ohne Häkchen kein Zugang. */
+  var KONTAKT_PFLICHT = false;
+  var COACH = 'mindspiration';
+  function sendeAnmeldung(payload) {
+    return fetch('/.netlify/functions/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(function (r) { if (!r.ok) throw new Error('status ' + r.status); return true; });
+  }
+  function entsperre() { document.body.classList.remove('gesperrt'); $('zugang').hidden = true; window.scrollTo(0, 0); }
+  (function () {
+    var offen = speicher.lies('zugangOffen', null);
+    if (offen) sendeAnmeldung(offen).then(function () { speicher.schreib('zugangOffen', null); }).catch(function () {});
+    if (vorschau || speicher.lies('zugang', null)) return;
+    document.body.classList.add('gesperrt'); $('zugang').hidden = false;
+    ['zName', 'zMail'].forEach(function (id) { $(id).addEventListener('input', function () { $(id + 'Fehler').textContent = ''; }); });
+    $('zKontakt').addEventListener('change', function () { $('zKontaktFehler').textContent = ''; });
+    $('zugangForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = $('zName').value.trim(), mail = $('zMail').value.trim(), kontakt = $('zKontakt').checked, ok = true;
+      if (!name) { $('zNameFehler').textContent = 'Bitte trag deinen Vornamen ein.'; ok = false; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) { $('zMailFehler').textContent = 'Diese E-Mail-Adresse sieht nicht ganz richtig aus.'; ok = false; }
+      if (KONTAKT_PFLICHT && !kontakt) { $('zKontaktFehler').textContent = 'Bitte bestätige kurz dein Einverständnis.'; ok = false; }
+      if (!ok) return;
+      var jetzt = new Date().toISOString();
+      var payload = {
+        coach: COACH, assessment: 'adventskalender', assessment_title: 'Adventskalender', pattern: '', pattern_label: '',
+        lead: { name: name, email: mail, kontakt: kontakt ? 'ja' : 'nein', kontakt_text: kontakt ? $('zKontaktText').textContent : '', kontakt_at: kontakt ? jetzt : '', zugang_at: jetzt },
+        scores: {}, picks: {}, answers: [], actions: [],
+        meta: { ref: document.referrer || '', ua: navigator.userAgent.slice(0, 200), page: location.pathname }
+      };
+      var b = $('zLos'); b.disabled = true; b.textContent = 'Einen Moment';
+      speicher.schreib('zugang', { name: name, at: jetzt });
+      var fertig = false;
+      function weiter() { if (fertig) return; fertig = true; entsperre(); }
+      sendeAnmeldung(payload).then(weiter).catch(function () { speicher.schreib('zugangOffen', payload); weiter(); });
+      setTimeout(function () { if (!fertig) { speicher.schreib('zugangOffen', payload); weiter(); } }, 5000);
+    });
+  })();
+  if (/Instagram|FBAN|FBAV/i.test(navigator.userAgent)) $('countdown').before(el('p', { class: 'ig-hinweis', text: 'Du bist gerade im Instagram-Browser. Damit deine Einträge gespeichert bleiben, öffne den Kalender lieber in Safari oder Chrome: oben rechts auf die drei Punkte tippen und „Im Browser öffnen“ wählen.' }));
+  if (LINKS.webinar) { $('webinarKnopf').href = mitUtm(LINKS.webinar); $('webinarKarte').hidden = false; }
+  if (document.fonts && document.fonts.load) document.fonts.load("italic 500 40px 'Cormorant Garamond'");
+  $('heroKranz').innerHTML = kranz('Dezember');
+  himmel();
+})();
+</script>
+
+</body>
+</html>
