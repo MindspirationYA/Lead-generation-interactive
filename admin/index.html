@@ -92,6 +92,15 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 .toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:20px; font-size:14px; opacity:0; transition:opacity .2s; pointer-events:none; z-index:30}
 .toast.on{opacity:1}
 .hint{font-size:13px;color:var(--rust);align-self:center}
+.sys{display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:14px; color:var(--muted); margin:0 0 4px}
+.sys span{margin-right:4px}
+.sys-note{font-size:12px; color:var(--muted); margin:0 0 14px}
+.los{border:1px solid var(--rule); border-radius:12px; padding:14px 16px; margin:0 0 16px}
+.los h2{font-size:22px; margin:0 0 4px}
+.los p{margin:4px 0}
+.los .gew{margin:10px 0; padding-left:20px}
+.los .gew li{margin:6px 0}
+.los .gew .btn{margin-left:6px}
 </style>
 </head>
 <body>
@@ -103,8 +112,53 @@ body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-in
 const ICA = window.ICA || {}; const AS = ICA.assessments || {};
 /* readable names for score keys and extra fields */
 const dimLabel = k => { for (const a of Object.values(AS)) if (a.dimensions && a.dimensions[k]) return a.dimensions[k].label; return k; };
-const EXTRA = { consent:"Einwilligung", consent_text:"Einwilligungstext", consent_at:"Eingewilligt am", kontakt:"Kontakt erlaubt", kontakt_text:"Einwilligungstext", kontakt_at:"Kontakt erlaubt am", zugang_at:"Angemeldet am" };
+const EXTRA = { teilnahme_at:"Teilnahme am", consent:"Einwilligung", consent_text:"Einwilligungstext", consent_at:"Eingewilligt am", kontakt:"Kontakt erlaubt", kontakt_text:"Einwilligungstext", kontakt_at:"Kontakt erlaubt am", zugang_at:"Angemeldet am" };
 const isCal = l => l.assessment_id === "adventskalender";
+const isLos = l => l.assessment_id === "verlosung";
+const isQuiz = l => !isCal(l) && !isLos(l);
+/* ---------- Verlosung Klarheits-Call ----------
+   Teilnahme bis 26.12.2026, 23:59 Uhr deutscher Zeit (= 22:59:59 UTC). Ziehung ab 27.12.
+   KLARHEIT_LINK: Link zur Google-Kalender-Buchungsseite „Klarheits-Call“ HIER EINTRAGEN, sobald er angelegt ist. */
+const LOS_SCHLUSS = "2026-12-26T22:59:59.999Z";
+const KLARHEIT_LINK = "";
+const LOS_KEY = () => `ica-admin-verlosung-${(session && session.coach) || "site"}`;
+function losTeilnehmerinnen(){
+  const byMail = new Map();
+  [...data.leads].filter(l => isLos(l) && l.email && l.created_at <= LOS_SCHLUSS)
+    .sort((a,b) => String(a.created_at).localeCompare(String(b.created_at)))
+    .forEach(l => { const k = l.email.trim().toLowerCase(); if (!byMail.has(k)) byMail.set(k, l); });
+  return [...byMail.values()];
+}
+function gewinnMail(l){
+  const link = KLARHEIT_LINK || "[Link zum Klarheits-Call folgt]";
+  return { subject: "Du hast gewonnen: dein Klarheits-Call mit mir 🤍",
+    body: `Hey meine Liebe,\n\nich habe heute die Gewinnerinnen gezogen und du bist dabei! Herzlichen Glückwunsch, ich freue mich so auf unser Gespräch.\n\nIn deinem Klarheits-Call nehmen wir uns 45 Minuten nur für dich. Wir schauen gemeinsam, wo du gerade stehst, was dich noch zurückhält und was dein erster Schritt ins neue Jahr ist.\n\nBuch dir hier deinen Termin für den Januar: ${link}\n\nDu musst dafür nichts vorbereiten. Komm einfach so, wie du bist.\n\nFühl dich gedrückt,\nYassi von Mindspiration` };
+}
+const mailtoGewinn = l => { const m = gewinnMail(l); return `mailto:${encodeURIComponent(l.email)}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`; };
+function losZiehen(n){
+  const t = losTeilnehmerinnen(), pool = t.slice(), gew = [];
+  while (gew.length < n && pool.length){ const r = new Uint32Array(1); crypto.getRandomValues(r); gew.push(pool.splice(r[0] % pool.length, 1)[0]); }
+  return gew.map(l => l.id);
+}
+function renderLos(){
+  const box = document.getElementById("los"); if (!box) return;
+  const t = losTeilnehmerinnen();
+  if (!t.length && !data.leads.some(isLos)){ box.hidden = true; return; }
+  box.hidden = false;
+  let gezogen = []; try { gezogen = JSON.parse(localStorage.getItem(LOS_KEY()) || "[]"); } catch(e){}
+  const gew = gezogen.map(id => data.leads.find(l => l.id === id)).filter(Boolean);
+  const vorbei = new Date().toISOString() > LOS_SCHLUSS;
+  box.innerHTML = `<h2>Verlosung Klarheits-Call</h2>
+    <p>${t.length} ${t.length === 1 ? "Teilnehmerin" : "Teilnehmerinnen"} bis 26.12., 23:59 Uhr. ${vorbei ? "Die Teilnahme ist beendet." : "Die Teilnahme läuft noch."}</p>
+    ${gew.length ? `<ol class="gew">${gew.map(l => `<li><b>${esc(l.name)}</b> · ${esc(l.email)} <a class="btn sm" href="${mailtoGewinn(l)}">Gewinn-Mail schreiben</a></li>`).join("")}</ol>` : ""}
+    ${!KLARHEIT_LINK && gew.length ? `<p class="hint">Der Calendly-Link zum Klarheits-Call fehlt noch. In der Mail steht dann „[Link zum Klarheits-Call folgt]“.</p>` : ""}
+    <div class="acts">${gew.length ? `<button class="btn ghost sm" id="losNeu">Neu ziehen</button>` : `<button class="btn sm" id="losZieh" ${t.length ? "" : "disabled"}>5 Gewinnerinnen ziehen</button>`}</div>
+    ${!vorbei && !gew.length && t.length ? `<p class="sys-note">Zieh am besten erst am 27.12., damit alle Teilnahmen dabei sind.</p>` : ""}`;
+  const z = document.getElementById("losZieh");
+  if (z) z.onclick = () => { const ids = losZiehen(5); try { localStorage.setItem(LOS_KEY(), JSON.stringify(ids)); } catch(e){} renderLos(); toast(`${ids.length} ${ids.length === 1 ? "Gewinnerin" : "Gewinnerinnen"} gezogen`); };
+  const nb = document.getElementById("losNeu");
+  if (nb) nb.onclick = () => { if (nb.dataset.sicher !== "1"){ nb.dataset.sicher = "1"; nb.textContent = "Wirklich neu ziehen? Nochmal tippen"; return; } try { localStorage.removeItem(LOS_KEY()); } catch(e){} renderLos(); };
+}
 const kontaktChip = l => (l.lead_extra && l.lead_extra.kontakt === "ja") ? `<span class="chip gold">Kontakt erlaubt</span>` : `<span class="chip">Kein Kontakt</span>`;
 const app = document.getElementById("app");
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -172,13 +226,18 @@ function renderApp(){
       <select id="fp"><option value="">Alle Muster</option>${patterns.map(p => `<option ${view.pattern===p?"selected":""}>${esc(p)}</option>`).join("")}</select>
       <button class="btn ghost" id="csv">CSV exportieren</button>
     </div>
+    <div class="sys"><span>Für systeme.io exportieren:</span>${Object.entries(SYS_RANGES).map(([k,v]) => `<button class="btn ghost sm" data-sys="${k}">${v}</button>`).join("")}</div>
+    <p class="sys-note">Alle Kontakte mit E-Mail-Adresse. Die Spalte „Kontakt erlaubt“ zeigt dir, wer zugestimmt hat. Deine Filter oben gelten auch hier.</p>
+    <div class="los" id="los" hidden></div>
     <div class="list" id="list"></div>
   </div>`;
   renderList(seen);
+  renderLos();
   document.getElementById("q").oninput = e => { view.q = e.target.value; renderList(seen); };
   document.getElementById("fa").onchange = e => { view.assessment = e.target.value; renderList(seen); };
   document.getElementById("fp").onchange = e => { view.pattern = e.target.value; renderList(seen); };
   document.getElementById("csv").onclick = exportCsv;
+  document.querySelectorAll("[data-sys]").forEach(b => b.onclick = () => exportSys(b.dataset.sys));
   document.getElementById("out").onclick = () => { sessionStorage.removeItem(SESSION); session = null; renderLogin(); };
   document.getElementById("refresh").onclick = async () => { const r = await api(session); if (r.ok){ data = r; renderApp(); toast("Aktualisiert"); } else toast(r.error); };
   // mark everything as seen once the list has rendered
@@ -194,7 +253,7 @@ function renderList(seen){
       <div class="top"><b>${esc(l.name)}</b><time>${fmt(l.created_at)}</time></div>
       <div class="sub">
         ${l.created_at > seen ? `<span class="chip new">Neu</span>` : ""}
-        ${isCal(l) ? kontaktChip(l) : `<span class="chip gold">${esc(l.pattern_label||l.pattern)}</span>`}
+        ${isCal(l) ? kontaktChip(l) : isLos(l) ? `<span class="chip gold">Verlosung</span>` : `<span class="chip gold">${esc(l.pattern_label||l.pattern)}</span>`}
         <span class="chip">${esc(l.assessment_title||l.assessment_id)}</span>
         ${typeof l.overall === "number" ? `<span>Gesamt ${l.overall}</span>` : ""}
         ${l.lowest ? `<span>Mehr Aufmerksamkeit: ${esc(dimLabel(l.lowest))}</span>` : ""}
@@ -228,9 +287,11 @@ function openLead(id){
       </div>
       <div class="acts">
         ${l.email && isCal(l) ? (l.lead_extra && l.lead_extra.kontakt === "ja" ? `<a class="btn sm" href="mailto:${esc(l.email)}?subject=${encodeURIComponent("Dein Adventskalender")}&body=${encodeURIComponent(`Hallo ${l.name},\n\nschön, dass du beim Adventskalender dabei bist. \n\nLiebe Grüße`)}">E-Mail schreiben</a>` : `<span class="hint">Keine Kontakt-Einwilligung. Bitte nicht per E-Mail anschreiben.</span>`) : ""}
-        ${l.email && !isCal(l) ? `<a class="btn sm" href="mailto:${esc(l.email)}?subject=${encodeURIComponent("Dein Ergebnis: " + (l.pattern_label||""))}&body=${encodeURIComponent(`Hallo ${l.name},\n\ndanke, dass du dir die Zeit für den Check-in genommen hast. Dein Ergebnis war ${l.pattern_label||""}. Ich würde gern kurz hören, wie es dir damit geht.\n\nLiebe Grüße`)}">E-Mail schreiben</a>` : ""}
+        ${l.email && isLos(l) ? `<a class="btn sm" href="${mailtoGewinn(l)}">Gewinn-Mail schreiben</a>` : ""}
+        ${l.email && isQuiz(l) ? (() => { const m = followUpMail(l); return `<a class="btn sm" href="mailto:${esc(l.email)}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}">E-Mail schreiben</a><button class="btn ghost sm" id="copymail">Mail-Text kopieren</button>`; })() : ""}
         ${l.whatsapp ? `<a class="btn ${l.email?"ghost ":""}sm" href="${wa(l.whatsapp)}?text=${encodeURIComponent(`Hallo ${l.name}, danke, dass du den Check-in gemacht hast. Dein Ergebnis war ${l.pattern_label||""}. Wie geht es dir damit?`)}" target="_blank" rel="noopener">WhatsApp schreiben</a>` : ""}
         <button class="btn ghost sm" id="copylead">Zusammenfassung kopieren</button>
+        ${l.email ? `<button class="btn ghost sm" id="syslead">Für systeme.io exportieren</button>` : ""}
       </div>
     </section>
     ${scores.length ? `<section><h3>Bereiche</h3>${scores.map(([k,v]) => `<div class="meter"><div class="row"><b>${esc(dimLabel(k))}</b><span>${v}/100</span></div><div class="track ${v<40?"low":""}"><i style="width:${Math.max(v,3)}%"></i></div></div>`).join("")}</section>` : ""}
@@ -239,11 +300,49 @@ function openLead(id){
   const sheet = document.getElementById("sheet"); sheet.classList.add("on");
   document.getElementById("close").onclick = () => sheet.classList.remove("on");
   sheet.onclick = e => { if (e.target === sheet) sheet.classList.remove("on"); };
+  const sl = document.getElementById("syslead");
+  if (sl) sl.onclick = () => {
+    const { rows } = sysRows([l]);
+    const nm = String(l.name || "kontakt").trim().toLowerCase().replace(/[^a-z0-9äöüß]+/g, "-").replace(/^-+|-+$/g, "");
+    download(sysCsv(rows), `${data.coach.slug}-systeme-io-${nm || "kontakt"}-${new Date().toISOString().slice(0,10)}.csv`, false);
+    toast("1 Kontakt exportiert");
+  };
+  const cm = document.getElementById("copymail");
+  if (cm) cm.onclick = async () => {
+    const m = followUpMail(l);
+    try { await navigator.clipboard.writeText(`Betreff: ${m.subject}\n\n${m.body}`); toast("Mail-Text kopiert"); } catch(e){ toast("Kopieren ist hier nicht möglich"); }
+  };
   document.getElementById("copylead").onclick = async () => {
     const t = `${l.name}${l.email?" \u00b7 "+l.email:""}${l.whatsapp?" \u00b7 "+l.whatsapp:""}${l.instagram?" \u00b7 @"+l.instagram:""}\n${l.assessment_title||l.assessment_id}: ${l.pattern_label||l.pattern}\n` +
       scores.map(([k,v]) => `${dimLabel(k)} ${v}/100`).join(", ") + `\nMehr Aufmerksamkeit: ${dimLabel(l.lowest||"")}\n${fmt(l.created_at)}`;
     try { await navigator.clipboard.writeText(t); toast("Kopiert"); } catch(e){ toast("Kopieren ist hier nicht möglich"); }
   };
+}
+
+/* Warm follow-up email for a Check-in lead, built from ICA.followUp in config.js.
+   Falls back to a short neutral text if config.js has no followUp block yet. */
+function followUpMail(l){
+  const F = ICA.followUp;
+  const first = String(l.name || "").trim().split(/\s+/)[0] || "";
+  if (!F) return { subject: "Dein Ergebnis: " + (l.pattern_label || ""), body: `Hallo ${first},\n\ndanke, dass du dir die Zeit für den Check-in genommen hast. Dein Ergebnis war ${l.pattern_label || ""}. Ich würde gern kurz hören, wie es dir damit geht.\n\nLiebe Grüße` };
+  let link = F.callUrl || "";
+  try { const u = new URL(link); u.searchParams.set("utm_source", "check-in"); u.searchParams.set("utm_medium", "email"); u.searchParams.set("utm_content", String(l.pattern_label || l.pattern || "").toLowerCase().replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss").replace(/\s+/g, "-")); link = u.toString(); } catch(e){}
+  const sc = l.scores || {}, low = l.lowest, lowV = sc[low], from = F.strongFrom ?? 70;
+  const best = Object.entries(sc).filter(([k,v]) => typeof v === "number" && k !== low && v >= from).sort((a,b) => b[1] - a[1])[0];
+  const vars = { name: first, pattern: l.pattern_label || "", low: low ? dimLabel(low) : "", strong: best ? dimLabel(best[0]) : "", link };
+  const fill = t => String(t || "").replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
+  const allStrong = typeof lowV === "number" && lowV >= from;
+  /* order: greeting, her pattern, her weakest area, her strongest area, Yassi's story,
+     the change for her pattern, 1:1 offer, Wegweiser-Call, closing, signature */
+  const blocks = [
+    F.greeting, F.thanks,
+    (F.patterns || {})[l.pattern],
+    low ? (allStrong ? F.allStrong : (F.areas || {})[low]) : "",
+    (!allStrong && best) ? F.strong : "",
+    F.story, (F.goals || {})[l.pattern],
+    F.offer, link ? F.call : "", F.closing, F.signature
+  ];
+  return { subject: fill((F.subjects || {})[l.pattern] || F.subject), body: blocks.map(fill).filter(t => t && t.trim()).join("\n\n") };
 }
 
 function exportCsv(){
@@ -257,11 +356,69 @@ function exportCsv(){
     const ans = (l.answers||[]).map(a => a.answer && typeof a.answer === "object" ? Object.entries(a.answer).map(([k,n])=>`${k}=${n}`).join("; ") : a.answer);
     return [l.created_at, l.assessment_title||l.assessment_id, l.name, l.whatsapp, l.email, l.instagram, ...extras.map(k => (l.lead_extra||{})[k] ?? ""), l.branch, isCal(l) ? "Adventskalender" : (l.pattern_label||l.pattern), l.overall, dimLabel(l.lowest||""), ...dims.map(d => (l.scores||{})[d] ?? ""), ...ans].map(cell).join(",");
   }));
-  const blob = new Blob(["\ufeff" + lines.join("\n")], { type:"text/csv;charset=utf-8" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `${data.coach.slug}-leads-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+  download(lines.join("\n"), `${data.coach.slug}-leads-${new Date().toISOString().slice(0,10)}.csv`, true);
+}
+/* bom:true for Excel (umlauts show correctly), false for systeme.io (plain UTF-8, as its help pages ask) */
+function download(text, name, bom){
+  const blob = new Blob([(bom ? "\ufeff" : "") + text], { type:"text/csv;charset=utf-8" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
-function toast(m){ const t = document.getElementById("toast"); t.textContent = m; t.classList.add("on"); setTimeout(() => t.classList.remove("on"), 1800); }
+
+/* ---------- systeme.io export ----------
+   systeme.io imports CSV only (UTF-8, comma, email required).
+   Every lead with an email goes in (Yassi's decision, 20.11.2026). The column
+   "Kontakt erlaubt" says ja/nein: Check-in = consent box ticked,
+   Adventskalender = "Kontakt erlaubt" ticked. "ja" wins if she agreed anywhere.
+   One row per email address: a woman who did both is merged, newest data first. */
+const SYS_RANGES = { heute:"Heute", woche:"Letzte 7 Tage", monat:"Letzte 30 Tage" };
+const hasConsent = l => isCal(l) ? !!(l.lead_extra && l.lead_extra.kontakt === "ja") : !!(l.lead_extra && l.lead_extra.consent === "ja");
+function sinceFor(range){
+  if (range === "heute"){ const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
+  return Date.now() - (range === "woche" ? 7 : 30) * 864e5;
+}
+function sysRows(leads){
+  const byMail = new Map(); let skipped = 0;
+  [...leads].sort((a,b) => String(b.created_at).localeCompare(String(a.created_at))).forEach(l => {
+    if (!l.email) { skipped++; return; }
+    const key = l.email.trim().toLowerCase(), src = isCal(l) ? "Adventskalender" : isLos(l) ? "Verlosung" : "Check-in", ex = byMail.get(key);
+    if (ex){
+      if (!ex.sources.includes(src)) ex.sources.push(src);
+      if (!ex.quiz && isQuiz(l)) ex.quiz = l;
+      if (!ex.phone && l.whatsapp) ex.phone = l.whatsapp;
+      if (hasConsent(l)) ex.ok = true;
+      return;
+    }
+    byMail.set(key, { lead:l, email:key, sources:[src], quiz: isQuiz(l) ? l : null, phone: l.whatsapp || "", ok: hasConsent(l) });
+  });
+  return { rows:[...byMail.values()], skipped };
+}
+function sysPhone(p){
+  const raw = String(p || "").trim(); if (!raw) return "";
+  const digits = raw.replace(/\D/g, "");
+  return raw.startsWith("+") ? "+" + digits : raw.startsWith("00") ? "+" + digits.slice(2) : digits;
+}
+function sysCsv(rows){
+  const head = ["Email","First name","Phone number","Quelle","Muster","Mehr Aufmerksamkeit","Selbstwert","Grenzen","Energie","Richtung","Kontakt erlaubt","Eingetragen am"];
+  const cell = v => `"${String(v ?? "").replace(/"/g,'""')}"`;
+  const lines = [head.map(cell).join(",")].concat(rows.map(r => {
+    const q = r.quiz || {}, sc = q.scores || {};
+    return [r.email, String(r.lead.name || "").trim(), sysPhone(r.phone), r.sources.join(" + "), q.pattern_label || "", q.lowest ? dimLabel(q.lowest) : "",
+      sc.selbstwert ?? "", sc.grenzen ?? "", sc.energie ?? "", sc.richtung ?? "", r.ok ? "ja" : "nein", String(r.lead.created_at || "").slice(0,10)].map(cell).join(",");
+  }));
+  return lines.join("\r\n") + "\r\n";
+}
+function exportSys(range){
+  const since = sinceFor(range);
+  const inRange = filtered().filter(l => new Date(l.created_at).getTime() >= since);
+  if (!inRange.length) return toast(`Keine Leads: ${SYS_RANGES[range]}`);
+  const { rows, skipped } = sysRows(inRange);
+  const left = skipped ? `, ${skipped} ohne E-Mail-Adresse ausgelassen` : "";
+  if (!rows.length) return toast(`Keine Kontakte mit E-Mail-Adresse${left}`, 3500);
+  download(sysCsv(rows), `${data.coach.slug}-systeme-io-${range}-${new Date().toISOString().slice(0,10)}.csv`, false);
+  toast(`${rows.length} ${rows.length === 1 ? "Kontakt" : "Kontakte"} exportiert${left}`, 3500);
+}
+function toast(m, ms){ const t = document.getElementById("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), ms || 1800); }
 
 (async () => {
   if (session){ const r = await api(session); if (r.ok){ data = r; return renderApp(); } session = null; sessionStorage.removeItem(SESSION); }
