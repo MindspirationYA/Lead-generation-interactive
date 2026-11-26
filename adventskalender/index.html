@@ -454,6 +454,11 @@ a.knopf.cta { display: flex; align-items: center; justify-content: center; text-
 .t9-reihe .knopf { width: auto; flex: none; min-height: 0; padding: 0 16px; }
 .t9-auf { align-self: center; }
 .wetter-ok { margin: 4px 0 0; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 19px; line-height: 1.35; text-align: center; color: var(--tanne); text-wrap: balance; }
+
+/* Runde 26.11.2026, Teil 2: Geschenk-Fenster in Türchen 24 mittig, frei von „Powered by Netlify" */
+#geschenk { background: rgba(31,48,56,.62); align-items: center; padding: calc(16px + env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) calc(76px + env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px)); box-sizing: border-box; }
+.geschenk-blatt { border-radius: 22px; max-height: 100%; padding-bottom: 22px; background: #fffdf7; border: 2px solid var(--gold); box-shadow: 0 18px 50px rgba(20,30,36,.45); }
+.geschenk-blatt .griff { display: none; }
 </style>
 </head>
 <body>
