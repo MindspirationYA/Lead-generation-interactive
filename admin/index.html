@@ -120,11 +120,12 @@ const isQuiz = l => !isCal(l) && !isLos(l);
    Teilnahme bis 26.12.2026, 23:59 Uhr deutscher Zeit (= 22:59:59 UTC). Ziehung ab 27.12.
    KLARHEIT_LINK: Link zur Google-Kalender-Buchungsseite „Klarheits-Call“ HIER EINTRAGEN, sobald er angelegt ist. */
 const LOS_SCHLUSS = "2026-12-26T22:59:59.999Z";
-const KLARHEIT_LINK = "";
+const LOS_START = "2026-12-23T23:00:00.000Z";   /* 24.12.2026, 0 Uhr deutscher Zeit: frühere Einträge sind Tests und zählen nicht */
+const KLARHEIT_LINK = "https://calendar.google.com/calendar/appointments/schedules/AcZssZ1HVXoO6KH3YlWdXwazow2OzwMR6DZAFqvMJOWrDVbxZQRkj7qc6ILvHEm8ZyKL-Kp8v7et-9J8";
 const LOS_KEY = () => `ica-admin-verlosung-${(session && session.coach) || "site"}`;
 function losTeilnehmerinnen(){
   const byMail = new Map();
-  [...data.leads].filter(l => isLos(l) && l.email && l.created_at <= LOS_SCHLUSS)
+  [...data.leads].filter(l => isLos(l) && l.email && l.created_at >= LOS_START && l.created_at <= LOS_SCHLUSS)
     .sort((a,b) => String(a.created_at).localeCompare(String(b.created_at)))
     .forEach(l => { const k = l.email.trim().toLowerCase(); if (!byMail.has(k)) byMail.set(k, l); });
   return [...byMail.values()];
@@ -132,7 +133,7 @@ function losTeilnehmerinnen(){
 function gewinnMail(l){
   const link = KLARHEIT_LINK || "[Link zum Klarheits-Call folgt]";
   return { subject: "Du hast gewonnen: dein Klarheits-Call mit mir 🤍",
-    body: `Hey meine Liebe,\n\nich habe heute die Gewinnerinnen gezogen und du bist dabei! Herzlichen Glückwunsch, ich freue mich so auf unser Gespräch.\n\nIn deinem Klarheits-Call nehmen wir uns 45 Minuten nur für dich. Wir schauen gemeinsam, wo du gerade stehst, was dich noch zurückhält und was dein erster Schritt ins neue Jahr ist.\n\nBuch dir hier deinen Termin für den Januar: ${link}\n\nDu musst dafür nichts vorbereiten. Komm einfach so, wie du bist.\n\nFühl dich gedrückt,\nYassi von Mindspiration` };
+    body: `Hey meine Liebe,\n\nich habe heute die Gewinnerinnen gezogen und du bist dabei! Herzlichen Glückwunsch, ich freue mich so auf unser Gespräch.\n\nIn deinem Klarheits-Call nehmen wir uns 45 Minuten nur für dich. Wir schauen gemeinsam, wo du gerade stehst, was dich noch zurückhält und was dein erster Schritt ins neue Jahr ist.\n\nBuch dir hier deinen Termin für den Januar. Die Buchungsseite heißt „Dein Call mit Yassi“:\n${link}\n\nDu musst dafür nichts vorbereiten. Komm einfach so, wie du bist.\n\nFühl dich gedrückt,\nYassi von Mindspiration` };
 }
 const mailtoGewinn = l => { const m = gewinnMail(l); return `mailto:${encodeURIComponent(l.email)}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`; };
 function losZiehen(n){
