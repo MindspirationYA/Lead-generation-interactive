@@ -438,6 +438,22 @@ body.gesperrt main.seite { display: none; }
 #blattInnen p, .einladung p, .los-karte p, .w-punkt p { text-wrap: pretty; }
 .baum-wrap-hinweis { max-width: 26ch; align-self: center; }
 .einladung .knopf.cta { font-size: clamp(13px, 3.7vw, 15px); padding-inline: 12px; line-height: 1.25; }
+
+/* Runde 26.11.2026 */
+a.knopf.cta { display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; }
+.einleitung-anm { max-width: none; }
+.nw { white-space: nowrap; }
+.w-geschenk { margin-top: 8px; font-weight: 600; color: var(--tanne); text-wrap: balance; }
+.home-info summary { text-wrap: balance; }
+.t9 .karte.wisch { min-height: 96px; padding: 16px; }
+.t9 .karte.wisch .satz { font-size: 19px; }
+.t9 .zwei .knopf { min-height: 44px; }
+.t9-eigen { margin-top: 4px; gap: 8px; }
+.t9-reihe { display: flex; gap: 8px; }
+.t9-reihe .feld { flex: 1; min-width: 0; }
+.t9-reihe .knopf { width: auto; flex: none; min-height: 0; padding: 0 16px; }
+.t9-auf { align-self: center; }
+.wetter-ok { margin: 4px 0 0; font-family: var(--satz); font-style: italic; font-weight: 500; font-size: 19px; line-height: 1.35; text-align: center; color: var(--tanne); text-wrap: balance; }
 </style>
 </head>
 <body>
@@ -447,7 +463,7 @@ body.gesperrt main.seite { display: none; }
     <div id="zugangKranz"></div>
     <h1 id="zugangTitel">Halt und Richtung im Dezember</h1>
     <p class="unter">Schön, dass du da bist 🤍</p>
-    <p class="einleitung">Trag hier deinen Vornamen und deine E-Mail-Adresse ein, dann öffnet sich dein Kalender.</p>
+    <p class="einleitung einleitung-anm">Trag deinen Vornamen und deine <span class="nw">E-Mail</span> ein, dann öffnet sich dein Kalender.</p>
     <p class="einleitung einleitung-ende">Ab dem 1. Dezember gehen wir gemeinsam durch den Dezember, Türchen für Türchen.</p>
   </header>
   <form class="zugang-karte" id="zugangForm" novalidate>
@@ -457,7 +473,7 @@ body.gesperrt main.seite { display: none; }
     <label class="lb" for="zMail">E-Mail-Adresse</label>
     <input class="feld" id="zMail" name="email" type="email" placeholder="deine@e-mail.de" autocomplete="email" maxlength="160" required>
     <p class="fehler" id="zMailFehler"></p>
-    <label class="check"><input type="checkbox" id="zKontakt" name="kontakt"><span id="zKontaktText">Ja, ich möchte den kostenlosen Kalender nutzen und dafür zukünftig deine E-Mail-Impulse, Einladungen zu den Live-Calls und Infos zu deinen Angeboten bekommen. Abmelden kann ich mich jederzeit.</span></label>
+    <label class="check"><input type="checkbox" id="zKontakt" name="kontakt"><span id="zKontaktText">Ja, ich möchte den kostenlosen Kalender nutzen und dafür zukünftig deine E-Mail-Impulse, Einladungen zu den Live-Calls und Infos zu deiner Begleitung bekommen. Abmelden kann ich mich jederzeit.</span></label>
     <p class="fehler" id="zKontaktFehler"></p>
     <button class="knopf" id="zLos" type="submit" style="margin-top:16px">Zu meinem Kalender</button>
     <p class="info">Hinweise zum Datenschutz findest du in meiner <a href="https://www.mindspiration.co/datenschutz" target="_blank" rel="noopener">Datenschutzerklärung</a>.</p>
@@ -1032,16 +1048,17 @@ body.gesperrt main.seite { display: none; }
     d.appendChild(el('p', { text: 'Android: In Chrome oben rechts auf die drei Punkte tippen, dann auf „Zum Startbildschirm hinzufügen“.' }));
     return d;
   }
-  /* Feld für Türchen 2, wenn der Tag sonnig ist */
-  function leichtFeld() {
-    var box = el('div', { class: 'spalte', style: 'margin-top:10px' }), ok = text('', 'hinweis');
-    var f = el('input', { class: 'feld', maxlength: '80', placeholder: 'Was hat den Tag leicht gemacht?', 'aria-label': 'Was hat den Tag leicht gemacht?', autocomplete: 'off' });
+  /* Feld für Türchen 2, passend zum Wetter */
+  function wetterFeld(ph, lab, okText, insBuch) {
+    var box = el('div', { class: 'spalte', style: 'margin-top:10px' }), ok = el('p', { class: 'wetter-ok' }); ok.hidden = true;
+    var f = el('input', { class: 'feld', maxlength: '80', placeholder: ph, 'aria-label': ph, autocomplete: 'off' });
     box.appendChild(f);
-    box.appendChild(knopf('Festhalten', function () {
+    var kn = knopf(lab, function () {
       var t = f.value.trim(); if (!t) { f.focus(); return; }
-      var l = speicher.lies('buch', {}).leicht || []; l.push(t); buch('leicht', l); f.value = '';
-      ok.textContent = 'Festgehalten. Schön, dass es diesen Moment gab.';
-    }, 'hell'));
+      if (insBuch) { var l = speicher.lies('buch', {}).leicht || []; l.push(t); buch('leicht', l); }
+      f.hidden = true; kn.hidden = true; ok.textContent = okText; ok.hidden = false;
+    }, 'hell');
+    box.appendChild(kn);
     box.appendChild(ok);
     return box;
   }
@@ -1054,16 +1071,15 @@ body.gesperrt main.seite { display: none; }
       r.appendChild(el('h3', { text: 'Zum Start: Lass uns dein Nervensystem beruhigen' }));
       r.appendChild(text('Wenn du länger ausatmest als einatmest, bekommt dein Körper das Signal: Ich bin sicher. Dein Herzschlag wird ruhiger und deine Gedanken werden leiser. Folge dem Punkt auf der Linie: 4 Sekunden einatmen, wenn sie hochgeht, 8 Sekunden ausatmen, wenn sie runtergeht. Die Übung dauert 60 Sekunden und du kannst jederzeit stoppen.'));
       r.appendChild(atemBox(60));
-      r.appendChild(text('Morgen wartet das nächste Türchen auf dich.', 'hinweis'));
       r.appendChild(homeLink());
       r.appendChild(einladung('Durch diesen Kalender gehst du allein. In der Community gehe ich mit dir: An den drei kommenden Adventssonntagen treffen wir uns live auf einen Kakao und für den Dezember gibt es eine eigene WhatsApp-Gruppe, in der ich dir ganz persönlich nah bin.', 'community', 'Du musst nicht allein durch den Dezember'));
     } },
     2: { t: 'Dein inneres Wetter', b: function (r) {
       r.appendChild(text('Wie sieht es heute in dir aus?'));
       var erg = el('div');
-      var W = [['☀️', 'Sonnig', 'Schön, dass heute ein leichter Tag ist. Was hat ihn leicht gemacht? Halte es hier kurz fest, damit du an schwereren Tagen daran denkst.'], ['⛅', 'Wolkig', 'Grau ist auch ein Wetter. Was würde dir heute einen kleinen Lichtblick geben?'], ['🌧️', 'Regen', 'An Regentagen braucht niemand ein Programm. Was darfst du heute weglassen?'], ['⛈️', 'Sturm', 'Wenn es in dir stürmt, muss heute nichts entschieden werden. Was kann bis morgen warten?']];
+      var W = [['☀️', 'Sonnig', 'Schön, dass heute ein leichter Tag ist. Was hat ihn leicht gemacht? Halte es hier kurz fest, damit du an schwereren Tagen daran denkst.', 'Was hat den Tag leicht gemacht?', 'Festhalten', 'Festgehalten. Schön, dass es diesen Moment gab.', true], ['⛅', 'Wolkig', 'Grau ist auch ein Wetter. Was würde dir heute einen kleinen Lichtblick geben?', 'Mein kleiner Lichtblick heute', 'Festhalten', 'Schön. Gönn ihn dir heute ganz bewusst.'], ['🌧️', 'Regen', 'An Regentagen braucht niemand ein Programm. Was darfst du heute weglassen?', 'Das darf ich heute weglassen', 'Weglassen', 'Gut so. Das darf heute liegen bleiben.'], ['⛈️', 'Sturm', 'Wenn es in dir stürmt, muss heute nichts entschieden werden. Was gibt dir gerade ein kleines bisschen Halt?', 'Das gibt mir gerade Halt', 'Festhalten', 'Halt dich heute daran fest. Auch dieser Sturm zieht vorbei.']];
       var ch = el('div', { class: 'wetter' });
-      W.forEach(function (w) { var b = el('button', { type: 'button', on: { click: function () { [].forEach.call(ch.children, function (c) { c.classList.remove('an'); }); b.classList.add('an'); erg.textContent = ''; erg.appendChild(satzKarte(w[2])); if (w[1] === 'Sonnig') erg.appendChild(leichtFeld()); } } }, [el('span', { text: w[0] }), document.createTextNode(w[1])]); ch.appendChild(b); });
+      W.forEach(function (w) { var b = el('button', { type: 'button', on: { click: function () { [].forEach.call(ch.children, function (c) { c.classList.remove('an'); }); b.classList.add('an'); erg.textContent = ''; erg.appendChild(satzKarte(w[2])); erg.appendChild(wetterFeld(w[3], w[4], w[5], w[6])); } } }, [el('span', { text: w[0] }), document.createTextNode(w[1])]); ch.appendChild(b); });
       r.appendChild(ch); r.appendChild(erg);
     } },
     3: { t: 'Deine Karte für heute', b: function (r) {
@@ -1178,7 +1194,7 @@ body.gesperrt main.seite { display: none; }
       var I = { 'Stark sein': 'Du darfst dich auch mal halten lassen.', 'Für alle da sein': 'Heute darfst du zuerst bei dir nachfragen.', 'Harmonie': 'Es darf auch mal knirschen, ohne dass du es reparieren musst.', 'Die perfekten Feiertage': 'Die Feiertage dürfen auch einfach nur okay sein.', 'Funktionieren': 'Du darfst langsamer werden. Es geht trotzdem weiter.', 'Alles selbst machen': 'Bitte heute eine Person um eine Kleinigkeit.', 'Erinnerungen': 'Du musst sie nicht wegwerfen. Du darfst sie leiser stellen.', 'Rücksicht': 'Rücksicht darf auch dir selbst gelten.' };
       var IM = { 'Stark sein': 'Deine Stärke darf auch leise sein.', 'Für alle da sein': 'Wie schön, wenn du dich selbst mitzählst.', 'Harmonie': 'Sie darf auch in dir beginnen.', 'Die perfekten Feiertage': 'Schön darf es werden, perfekt muss es nicht sein.', 'Funktionieren': 'Es hat dich getragen. Du darfst trotzdem Pausen machen.', 'Alles selbst machen': 'Du kannst so viel. Du darfst dir trotzdem helfen lassen.', 'Erinnerungen': 'Sie gehören zu dir und dürfen bleiben.', 'Rücksicht': 'Schön, dass dir andere wichtig sind. Du zählst genauso.' };
       var S = mische(Object.keys(I)), i = 0, mit = [], hier = [];
-      var buehne = el('div', { class: 'spalte' });
+      var buehne = el('div', { class: 'spalte t9' });
       function weiter(rechts) { (rechts ? mit : hier).push(S[i]); i++; zeige(); }
       function zeige() {
         buehne.textContent = '';
@@ -1189,7 +1205,7 @@ body.gesperrt main.seite { display: none; }
           buehne.appendChild(text(hier.length ? 'Du musst nicht alles auf einmal hierlassen. Such dir einen der Sätze aus, der dich heute begleitet.' : 'Du nimmst alles mit. Auch das ist in Ordnung. Schau einfach, was davon heute leichter sein darf.', 'hinweis'));
           var zl = []; if (hier.length) zl.push('Das lasse ich hier: ' + hier.join(', ')); if (mit.length) zl.push('Das nehme ich mit: ' + mit.join(', '));
           buehne.appendChild(speicherKnopf(listenBild('Was ich mitnehme und hierlasse', zl), 'mitnehmen-hierlassen.png', 'Als Bild speichern'));
-          eig9.hidden = true; eigK9.hidden = true; eigText9.hidden = true;
+          eigBox.hidden = true;
           return;
         }
         var hl = el('span', { class: 'wisch-hinweis links', text: '← Lasse ich hier' }), hr = el('span', { class: 'wisch-hinweis rechts', text: 'Nehme ich mit →' });
@@ -1202,10 +1218,15 @@ body.gesperrt main.seite { display: none; }
         buehne.appendChild(text((i + 1) + ' von ' + S.length, 'hinweis'));
       }
       var EIG = ['Schön, dass du das für dich benannt hast.', 'Allein, dass du es aufschreibst, macht es schon ein bisschen leichter.', 'Das darf hierbleiben. Du trägst es nicht mehr allein.', 'Du darfst entscheiden, wie viel Platz es noch bekommt.', 'Gut, dass du ehrlich zu dir bist.'], eigene = 0;
+      var eigBox = el('div', { class: 'spalte t9-eigen' });
       var eigText9 = text('Fehlt dir etwas? Füg bis zu 5 eigene Dinge hinzu.', 'hinweis');
-      var eig9 = el('input', { class: 'feld', id: 'eigen9', maxlength: '40', placeholder: 'Etwas Eigenes hinzufügen', 'aria-label': 'Etwas Eigenes', autocomplete: 'off' });
-      var eigK9 = knopf('Hinzufügen', function () { var t = eig9.value.trim(); if (!t) { eig9.focus(); return; } if (eigene >= 5) { eigText9.textContent = 'Du hast schon 5 eigene Dinge hinzugefügt.'; return; } I[t] = EIG[eigene % EIG.length]; IM[t] = 'Schön, dass du das mitnimmst.'; eigene++; S.splice(i + 1, 0, t); eig9.value = ''; zeige(); }, 'hell');
-      r.appendChild(eigText9); r.appendChild(eig9); r.appendChild(eigK9); zeige(); r.appendChild(buehne);
+      var eig9 = el('input', { class: 'feld', id: 'eigen9', maxlength: '40', placeholder: 'Etwas Eigenes …', 'aria-label': 'Etwas Eigenes', autocomplete: 'off' });
+      function dazu() { var t = eig9.value.trim(); if (!t) { eig9.focus(); return; } if (eigene >= 5) { eigText9.textContent = 'Du hast schon 5 eigene Dinge hinzugefügt.'; return; } I[t] = EIG[eigene % EIG.length]; IM[t] = 'Schön, dass du das mitnimmst.'; eigene++; S.splice(i + 1, 0, t); eig9.value = ''; eigText9.textContent = 'Hinzugefügt. Es kommt als nächste Karte.'; zeige(); }
+      var reihe = el('div', { class: 't9-reihe' }, [eig9, el('button', { type: 'button', class: 'knopf hell', text: 'Hinzufügen', on: { click: dazu } })]);
+      var auf = el('button', { type: 'button', class: 'textknopf t9-auf', text: '+ Etwas Eigenes hinzufügen', on: { click: function () { auf.hidden = true; eigText9.hidden = false; reihe.hidden = false; eig9.focus(); } } });
+      eigText9.hidden = true; reihe.hidden = true;
+      eigBox.appendChild(auf); eigBox.appendChild(eigText9); eigBox.appendChild(reihe);
+      zeige(); r.appendChild(buehne); r.appendChild(eigBox);
       r.appendChild(einladung('Loslassen ist leichter, wenn du es nicht allein tun musst. In der Community gehen wir diesen Weg gemeinsam, weil ich weiß, wie schwer er allein ist.', 'community'));
     } },
     10: { t: 'Deine Schneekugel', b: function (r) {
@@ -1368,7 +1389,7 @@ body.gesperrt main.seite { display: none; }
       r.appendChild(einladung('Wenn dich so eine Situation immer wieder einholt, lass uns reden. Im kostenlosen Wegweiser-Call schauen wir, wie du in Zukunft gut für dich entscheidest, damit sich wirklich etwas verändert.', 'call'));
     } },
     19: { t: 'Was gibt mir Energie?', b: function (r) {
-      r.appendChild(text('Hier findest du Dinge aus deinem Alltag. Entscheide bei jedem, ob es dir gerade Kraft gibt oder Kraft nimmt. Hier gibt es kein Richtig. So siehst du, was dir guttut und was dich Energie kostet.'));
+      r.appendChild(text('Hier findest du Dinge aus deinem Alltag. Entscheide bei jedem, ob es dir gerade Kraft gibt oder Kraft nimmt. Hier gibt es kein Richtig oder Falsch. So siehst du, was dir guttut und was dich Energie kostet.'));
       var A = ['Social Media', 'Zeit allein', 'Familienbesuche', 'Bewegung', 'Weihnachtsvorbereitungen', 'Gespräche mit Freundinnen', 'Nachrichten beantworten', 'Früh schlafen'], w = {}, erg = el('div', { class: 'spalte' }), liste = el('div');
       function auswerten() {
         if (Object.keys(w).length < A.length) return;
@@ -1673,7 +1694,7 @@ body.gesperrt main.seite { display: none; }
       baum.classList.add('an'); baum.setAttribute('aria-label', 'Der Baum leuchtet'); tipp.hidden = true; titel.textContent += ' 🤍';
       var home = !standalone();
       karte.appendChild(text('Wir gehen jetzt gemeinsam durch den Dezember, Türchen für Türchen. ' + (home ? 'Zwei kleine Dinge, bevor wir starten:' : 'Eine Sache noch, bevor wir starten:')));
-      karte.appendChild(punkt('1', 'Jeden Tag ein Türchen', 'Jeden Tag öffnest du ein neues Türchen. Hast du mal einen Tag nicht reingeschaut? Kein Problem, alle geöffneten Türchen bleiben für dich da. Und an Heiligabend wartet noch etwas auf dich.'));
+      var p1 = punkt('1', 'Jeden Tag ein Türchen', 'Und hast du mal einen Tag nicht reingeschaut, ist das kein Problem. Alle geöffneten Türchen bleiben für dich da.'); p1.lastChild.appendChild(el('p', { class: 'w-geschenk', text: 'Am 24.12. wartet etwas Besonderes auf dich. Bleib also unbedingt dran 🤍' })); karte.appendChild(p1);
       if (home) karte.appendChild(punkt('2', 'Leg den Kalender auf deinen Home-Bildschirm', 'So hast du ihn jeden Tag mit einem Klick griffbereit.', 'iPhone: in Safari unten auf das Teilen-Symbol, dann „Zum Home-Bildschirm“. Android: in Chrome oben rechts auf die drei Punkte, dann „Zum Startbildschirm hinzufügen“.'));
       karte.appendChild(knopf('Zu meinem Kalender', function () { speicher.schreib('willkommen', true); w.remove(); document.body.style.overflow = ''; }));
       karte.hidden = false;
